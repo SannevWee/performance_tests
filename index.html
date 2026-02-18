@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance Testing Guide — Mingle Sport</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --green-900: #14532d;
+    --green-800: #166534;
+    --green-700: #15803d;
+    --green-600: #16a34a;
+    --green-100: #dcfce7;
+    --green-50: #f0fdf4;
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.06);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.1), 0 12px 28px rgba(0,0,0,0.08);
+    --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--gray-800);
+    background: var(--gray-50);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    color: var(--gray-900);
+    line-height: 1.25;
+  }
+
+  /* ── View system ─────────────────────────────── */
+  .view {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .view.active {
+    display: block;
+  }
+  .view.visible {
+    opacity: 1;
+  }
+
+  /* ── Layout ──────────────────────────────────── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ── Top bar ─────────────────────────────────── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--green-800);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .topbar-logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  .topbar-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green-600);
+    display: inline-block;
+  }
+  .topbar-section {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+  }
+
+  /* ── Back button ─────────────────────────────── */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    color: var(--green-800);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-bottom: 24px;
+  }
+  .back-btn:hover {
+    background: var(--green-50);
+    border-color: var(--green-700);
+    transform: translateX(-2px);
+  }
+  .back-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ── Hero ─────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, var(--green-900) 0%, var(--green-800) 50%, var(--green-700) 100%);
+    padding: 72px 20px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: -5%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .hero-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .hero-intro {
+    max-width: 620px;
+    margin: 0 auto;
+    color: rgba(255,255,255,0.85);
+    font-size: 1rem;
+    line-height: 1.7;
+    position: relative;
+  }
+
+  /* ── Section headers ─────────────────────────── */
+  .section-header {
+    padding: 48px 0 24px;
+  }
+  .section-header h2 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .section-header p {
+    margin-top: 6px;
+    color: var(--gray-500);
+    font-size: 0.95rem;
+  }
+
+  /* ── Cards grid ──────────────────────────────── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding-bottom: 16px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all var(--transition);
+    border: 1px solid var(--gray-100);
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--green-100);
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--green-700);
+    transform: scaleX(0);
+    transition: transform var(--transition);
+  }
+  .card:hover::after {
+    transform: scaleX(1);
+  }
+  .card-icon {
+    font-size: 2rem;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .card-subtitle {
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    margin-bottom: 14px;
+  }
+  .card-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--green-800);
+    background: var(--green-50);
+    padding: 5px 12px;
+    border-radius: 50px;
+  }
+  .card-meta svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* ── Info cards (organizing / benchmarks) ───── */
+  .info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding-bottom: 56px;
+  }
+  .info-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all var(--transition);
+    border: 1px solid var(--gray-100);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--green-100);
+  }
+  .info-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: var(--green-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.4rem;
+  }
+  .info-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .info-card p {
+    color: var(--gray-500);
+    font-size: 0.85rem;
+  }
+  .info-card-arrow {
+    margin-left: auto;
+    color: var(--gray-300);
+    transition: color var(--transition), transform var(--transition);
+    flex-shrink: 0;
+  }
+  .info-card:hover .info-card-arrow {
+    color: var(--green-700);
+    transform: translateX(3px);
+  }
+
+  /* ── Footer ──────────────────────────────────── */
+  .footer {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--gray-500);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--gray-200);
+    background: var(--white);
+  }
+
+  /* ── Detail view ─────────────────────────────── */
+  .detail-header {
+    background: linear-gradient(135deg, var(--green-900) 0%, var(--green-800) 100%);
+    padding: 40px 20px 36px;
+  }
+  .detail-header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .detail-icon {
+    font-size: 2.4rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .detail-header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .detail-header p {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+  }
+
+  .detail-body {
+    padding: 40px 0 64px;
+  }
+  .detail-body h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 40px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--green-100);
+  }
+  .detail-body h2:first-child {
+    margin-top: 0;
+  }
+  .detail-body h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 28px 0 12px;
+    color: var(--green-900);
+  }
+  .detail-body h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 20px 0 10px;
+    color: var(--gray-700);
+  }
+  .detail-body p {
+    margin-bottom: 16px;
+    color: var(--gray-700);
+  }
+  .detail-body strong {
+    color: var(--gray-900);
+  }
+  .detail-body ul, .detail-body ol {
+    margin: 0 0 16px 20px;
+    color: var(--gray-700);
+  }
+  .detail-body li {
+    margin-bottom: 8px;
+  }
+  .detail-body li strong {
+    color: var(--gray-800);
+  }
+
+  /* ── Checklist ───────────────────────────────── */
+  .checklist {
+    list-style: none;
+    margin: 0 0 20px 0;
+    padding: 0;
+  }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none;
+  }
+  .checklist li:hover {
+    border-color: var(--green-600);
+    background: var(--green-50);
+  }
+  .checklist li.checked {
+    background: var(--green-50);
+    border-color: var(--green-600);
+  }
+  .checklist li.checked .checklist-text {
+    text-decoration: line-through;
+    color: var(--gray-500);
+  }
+  .checklist-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 2px solid var(--gray-300);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: all var(--transition);
+  }
+  .checklist li.checked .checklist-box {
+    background: var(--green-700);
+    border-color: var(--green-700);
+  }
+  .checklist-check {
+    display: none;
+  }
+  .checklist li.checked .checklist-check {
+    display: block;
+    color: white;
+  }
+  .checklist-text {
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--gray-700);
+    transition: all var(--transition);
+  }
+
+  /* ── Tables ──────────────────────────────────── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 0 0 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  thead {
+    background: var(--green-800);
+  }
+  th {
+    color: var(--white);
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700);
+  }
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+  tbody tr:nth-child(even) {
+    background: var(--gray-50);
+  }
+
+  /* ── Callout boxes ───────────────────────────── */
+  .callout {
+    background: var(--green-50);
+    border-left: 4px solid var(--green-700);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 0.92rem;
+    color: var(--green-900);
+  }
+  .callout strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--green-800);
+  }
+
+  .callout-warning {
+    background: #fffbeb;
+    border-left-color: #d97706;
+    color: #92400e;
+  }
+  .callout-warning strong {
+    color: #92400e;
+  }
+
+  /* ── Steps ───────────────────────────────────── */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+  }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: default;
+  }
+  .steps li::before {
+    content: counter(step);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--green-800);
+    color: var(--white);
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── Session flow cards ──────────────────────── */
+  .flow-step {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .flow-step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .flow-step-badge {
+    background: var(--green-800);
+    color: var(--white);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 50px;
+    white-space: nowrap;
+  }
+  .flow-step-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  .flow-step p, .flow-step ul {
+    margin-bottom: 10px;
+    font-size: 0.92rem;
+  }
+  .flow-step ul {
+    margin-left: 18px;
+  }
+  .flow-step li {
+    margin-bottom: 6px;
+  }
+
+  /* ── Responsive ──────────────────────────────── */
+  /* ── Setup diagrams ─────────────────────────── */
+  .setup-diagram {
+    margin: 20px 0 24px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow);
+    background: var(--white);
+  }
+  .setup-diagram img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .setup-diagram figcaption {
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    color: var(--gray-500);
+    text-align: center;
+    border-top: 1px solid var(--gray-100);
+    background: var(--gray-50);
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      padding: 48px 20px 44px;
+    }
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+    .info-cards {
+      grid-template-columns: 1fr;
+    }
+    .detail-header {
+      padding: 32px 20px 28px;
+    }
+    .section-header {
+      padding: 36px 0 20px;
+    }
+    th, td {
+      padding: 10px 12px;
+      font-size: 0.82rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TOP BAR                                        -->
+<!-- ══════════════════════════════════════════════ -->
+<nav class="topbar">
+  <span class="topbar-logo">Mingle Sport</span>
+  <span class="topbar-dot"></span>
+  <span class="topbar-section" id="topbar-section">Performance Testing Guide</span>
+</nav>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- HOME VIEW                                      -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="view-home" class="view active visible">
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Performance Testing Guide</h1>
+    <p class="hero-subtitle">A practical guide for grassroots football coaches</p>
+    <p class="hero-intro">Physical performance matters at every level of football. Performance tests give you concrete numbers that turn vague impressions into clear insights &mdash; helping you shape training sessions, track real progress, spot individual needs, and keep players motivated. What gets measured gets improved.</p>
+  </section>
+
+  <div class="container">
+    <!-- Test cards -->
+    <div class="section-header">
+      <h2>What's in this guide</h2>
+      <p>Three field-tested performance tests you can run with basic equipment and a mobile phone.</p>
+    </div>
+
+    <div class="cards-grid">
+      <div class="card" onclick="showView('sprint')">
+        <span class="card-icon">&#9889;</span>
+        <h3>30m Sprint</h3>
+        <p class="card-subtitle">Acceleration &amp; top speed</p>
+        <span class="card-meta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          &plusmn;10 min
+        </span>
+      </div>
+      <div class="card" onclick="showView('illinois')">
+        <span class="card-icon">&#128256;</span>
+        <h3>Illinois Agility Test</h3>
+        <p class="card-subtitle">Agility &amp; change of direction</p>
+        <span class="card-meta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          &plusmn;15 min
+        </span>
+      </div>
+      <div class="card" onclick="showView('yoyo')">
+        <span class="card-icon">&#129707;</span>
+        <h3>Yo-Yo Intermittent Recovery Test</h3>
+        <p class="card-subtitle">Football-specific endurance</p>
+        <span class="card-meta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          &plusmn;25 min
+        </span>
+      </div>
+    </div>
+
+    <!-- Info cards -->
+    <div class="section-header">
+      <h2>More resources</h2>
+    </div>
+
+    <div class="info-cards">
+      <div class="info-card" onclick="showView('organizing')">
+        <div class="info-card-icon">&#128203;</div>
+        <div>
+          <h3>Organizing your session</h3>
+          <p>Plan, prepare, and run a smooth test day</p>
+        </div>
+        <svg class="info-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="info-card" onclick="showView('benchmarks')">
+        <div class="info-card-icon">&#128200;</div>
+        <div>
+          <h3>Understanding benchmarks</h3>
+          <p>How to read and use your players' scores</p>
+        </div>
+        <svg class="info-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 30m SPRINT VIEW                                -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="view-sprint" class="view">
+  <div class="detail-header">
+    <div class="detail-header-inner">
+      <span class="detail-icon">&#9889;</span>
+      <h1>30m Sprint</h1>
+      <p>Acceleration &amp; top speed &middot; &plusmn;10 minutes</p>
+    </div>
+  </div>
+  <div class="container detail-body">
+    <button class="back-btn" onclick="showView('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to overview
+    </button>
+
+    <h2>Why this test?</h2>
+    <p>Football is a game of short, explosive moments. A striker breaking through the defensive line, a fullback recovering to stop a counter-attack, a winger sprinting to reach a through ball &mdash; these moments are decided by pure speed.</p>
+    <p>The 30m Sprint test measures two things: <strong>acceleration</strong> (how quickly a player reaches top speed, measured over the first 10 meters) and <strong>top speed</strong> (their maximum sprinting ability, measured between 20 and 30 meters). These are distinct physical qualities &mdash; a player can be quick off the mark but not particularly fast at full speed, or vice versa. Knowing the difference matters for coaching.</p>
+    <p>A player with strong acceleration but lower top speed thrives in tight spaces &mdash; think central midfield, playing short passes and making quick runs. A player with high top speed but slower acceleration might be better suited to wide positions where they have room to build up pace. Understanding your players' sprint profiles helps you make smarter decisions about positioning, playing style, and what to work on in training.</p>
+
+    <h2>What you need</h2>
+    <ul class="checklist" id="checklist-sprint">
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">4 cones</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Measuring tape</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">1 mobile phone (for filming at 60fps)</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Mingle input form</span>
+      </li>
+    </ul>
+
+    <h2>Setup</h2>
+    <p>Set up the sprint along the long line of the 16m area. Place 4 cones in a straight line at the following distances:</p>
+    <ul>
+      <li><strong>Cone 1:</strong> 1m (starting position)</li>
+      <li><strong>Cone 2:</strong> 10m</li>
+      <li><strong>Cone 3:</strong> 20m</li>
+      <li><strong>Cone 4:</strong> 30m</li>
+    </ul>
+    <p>The player starts behind the 16m area line.</p>
+
+    <figure class="setup-diagram">
+      <img src="Visuals/Layout Sprint Test.png" alt="30m Sprint setup diagram showing 4 cones placed at 1m, 10m, 20m, and 30m along the 16-meter area line, with camera position at a 90-degree angle">
+      <figcaption>30m Sprint — field setup with cone positions and camera angle</figcaption>
+    </figure>
+
+    <h2>Execution</h2>
+    <ol class="steps">
+      <li><span>Line up players alphabetically.</span></li>
+      <li><span>Each player sprints at maximum speed through the full 30m. <strong>Important:</strong> players should not slow down at the last cone &mdash; they sprint through it.</span></li>
+      <li><span>Each player gets <strong>3 attempts</strong>.</span></li>
+      <li><span>Film each attempt on video. One video per attempt.</span></li>
+    </ol>
+
+    <h2>Video recording requirements</h2>
+    <ul>
+      <li>Record at <strong>1080p 60fps</strong>.</li>
+      <li>Film from a <strong>90-degree angle</strong> (perpendicular to the sprint line), with all 4 cones visible in frame.</li>
+      <li>Do not use wide-angle lens.</li>
+      <li>One video per attempt.</li>
+    </ul>
+
+    <h2>Phone settings</h2>
+
+    <h3>iPhone</h3>
+    <p>Before the session, adjust these settings:</p>
+    <ol class="steps">
+      <li><span><strong>Camera format:</strong> Settings &rarr; Camera &rarr; Formats &rarr; select "Most Compatible". This records in H.264 MOV format, which is easier to process.</span></li>
+      <li><span><strong>Recording quality:</strong> Settings &rarr; Camera &rarr; Record Video &rarr; select "1080p at 60fps".</span></li>
+      <li><span><strong>Transfer settings:</strong> Settings &rarr; Photos &rarr; Transfer to Mac or PC &rarr; select "Keep Originals". This prevents the phone from converting the video during transfer.</span></li>
+    </ol>
+
+    <h3>Android</h3>
+    <ol class="steps">
+      <li><span>Open your camera app &rarr; Video settings &rarr; set resolution to 1080p and frame rate to 60fps.</span></li>
+      <li><span>No additional settings needed for transfer.</span></li>
+    </ol>
+
+    <h2>Transferring videos to your computer</h2>
+    <div class="callout callout-warning">
+      <strong>Important</strong>
+      Always transfer videos via <strong>USB cable</strong>. Do not use AirDrop, cloud storage, or email &mdash; these can compress the video and reduce the frame rate.
+    </div>
+
+    <h3>iPhone</h3>
+    <ol class="steps">
+      <li><span>Connect your iPhone to your computer with a USB cable.</span></li>
+      <li><span><strong>Mac:</strong> Use Image Capture or Finder to copy the video files.</span></li>
+      <li><span><strong>Windows:</strong> Use File Explorer to browse the phone and copy the video files.</span></li>
+    </ol>
+
+    <h3>Android</h3>
+    <ol class="steps">
+      <li><span>Connect your phone with a USB cable.</span></li>
+      <li><span>Select "File Transfer" (MTP) mode when prompted.</span></li>
+      <li><span>Copy the video files directly from the phone's DCIM folder.</span></li>
+    </ol>
+
+    <p><strong>Verification:</strong> After transfer, right-click the video file &rarr; Properties (Windows) or Get Info (Mac) and confirm the frame rate is 60fps.</p>
+
+    <h2>Processing the videos (Mac &mdash; QuickTime Player)</h2>
+    <p>This is how you extract the sprint times from the video:</p>
+    <ol class="steps">
+      <li><span>Open the video in <strong>QuickTime Player</strong>.</span></li>
+      <li><span>Enter trim mode: press <strong>Cmd+T</strong> (or go to Edit &rarr; Trim).</span></li>
+      <li><span>Use the <strong>left and right arrow keys</strong> to step through the video frame by frame.</span></li>
+      <li><span>For each cone, find the frame where the <strong>player's hips align with the cone</strong>. Read the timestamp displayed in the format <code>00:01.23</code> (seconds.centiseconds).</span></li>
+      <li><span>Note the timestamp at each of the 4 cones. You'll have 4 values per attempt.</span></li>
+      <li><span>Enter the timestamps into the Google Sheet / Mingle input form.</span></li>
+      <li><span>The sheet automatically calculates <strong>acceleration</strong> (0-10m time) and <strong>top speed</strong> (20-30m time) from the differences.</span></li>
+    </ol>
+    <div class="callout">
+      <strong>Why timestamps instead of frame counting?</strong>
+      Timestamps are frame-rate-independent. Whether someone accidentally recorded at 30fps or correctly at 60fps, the timestamps are still accurate &mdash; the only difference is precision (30fps gives ~33ms steps vs 60fps gives ~17ms steps). 60fps is still recommended for better precision, but the calculation works correctly either way.
+    </div>
+  </div>
+  <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- ILLINOIS AGILITY VIEW                          -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="view-illinois" class="view">
+  <div class="detail-header">
+    <div class="detail-header-inner">
+      <span class="detail-icon">&#128256;</span>
+      <h1>Illinois Agility Test</h1>
+      <p>Agility &amp; change of direction &middot; &plusmn;15 minutes</p>
+    </div>
+  </div>
+  <div class="container detail-body">
+    <button class="back-btn" onclick="showView('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to overview
+    </button>
+
+    <h2>Why this test?</h2>
+    <p>Football isn't played in straight lines. Players constantly change direction &mdash; sidestepping an opponent, adjusting to a loose ball, turning to track a run. Agility &mdash; the ability to change direction quickly without losing speed or balance &mdash; is one of the most important physical qualities in football.</p>
+    <p>The Illinois Agility Test measures exactly this. Players sprint, turn, and weave through cones in a course that mimics the kind of multi-directional movement football demands. The result is a single time that captures how efficiently a player moves through changes of direction.</p>
+    <p>This is especially relevant for defenders who need to react and turn quickly, midfielders navigating crowded spaces, and any player involved in 1v1 situations. If a player's agility score is significantly behind their sprint speed, it tells you they're fast in a straight line but lose time when they have to change direction &mdash; something you can specifically target in training with cone drills, ladder work, and small-sided games.</p>
+
+    <h2>What you need</h2>
+    <ul class="checklist" id="checklist-illinois">
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">8 cones</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Measuring tape</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Stopwatch</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Mingle input form</span>
+      </li>
+    </ul>
+
+    <h2>Setup</h2>
+    <p>The course is a <strong>10m &times; 5m rectangle</strong>.</p>
+    <ul>
+      <li>Place <strong>4 cones</strong> at the corners of the rectangle.</li>
+      <li>Place <strong>4 cones</strong> in a straight line down the center, spaced <strong>3.3m apart</strong>.</li>
+    </ul>
+
+    <figure class="setup-diagram">
+      <img src="Visuals/Layout Illinois.png" alt="Illinois Agility Test setup diagram showing a 10m by 5m rectangle with 4 corner cones and 4 center cones spaced 3.3m apart, with the weaving route marked">
+      <figcaption>Illinois Agility Test — course layout with cone positions and running route</figcaption>
+    </figure>
+
+    <h2>Execution</h2>
+    <ol class="steps">
+      <li><span>The player starts in a <strong>lying position</strong> at the start line, hands by their shoulders.</span></li>
+      <li><span>On the signal, the player gets up and sprints to the first center cone.</span></li>
+      <li><span>The player <strong>weaves zigzag</strong> through the 4 center cones.</span></li>
+      <li><span>At the end, the player sprints back to the finish line.</span></li>
+      <li><span>Record the time with a stopwatch.</span></li>
+      <li><span>Each player gets <strong>2 attempts</strong>.</span></li>
+      <li><span>Enter the times into the Mingle input form.</span></li>
+    </ol>
+  </div>
+  <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- YO-YO VIEW                                     -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="view-yoyo" class="view">
+  <div class="detail-header">
+    <div class="detail-header-inner">
+      <span class="detail-icon">&#129707;</span>
+      <h1>Yo-Yo Intermittent Recovery Test</h1>
+      <p>Football-specific endurance &middot; &plusmn;25 minutes</p>
+    </div>
+  </div>
+  <div class="container detail-body">
+    <button class="back-btn" onclick="showView('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to overview
+    </button>
+
+    <h2>Why this test?</h2>
+    <p>Football is not a long-distance run. During a match, players alternate between sprinting, jogging, walking, and standing still &mdash; over and over again for 90 minutes. What separates a player who stays sharp in the 85th minute from one who fades after halftime isn't steady-state endurance. It's <strong>intermittent endurance</strong>: the ability to recover quickly between repeated high-intensity efforts.</p>
+    <p>This is exactly what the Yo-Yo Intermittent Recovery Test measures. Unlike a continuous running test (like the beep test or a Cooper test), the Yo-Yo test includes a short recovery period between every shuttle &mdash; mimicking the stop-start nature of a real football match. That makes it the most football-specific stamina test available.</p>
+    <p>The results tell you how well a player can sustain repeated high-intensity efforts with limited recovery. A player who scores well can press the opponent, make overlapping runs, and still recover in time for the next sprint. A player who scores poorly will start making slower decisions, lose duels, and become a passenger in the final third of the match. Stamina is trainable &mdash; and knowing where your players stand helps you design sessions that build the right kind of fitness for football, not just general cardio.</p>
+
+    <h2>What you need</h2>
+    <ul class="checklist" id="checklist-yoyo">
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">3 cones per player (players cannot share cones)</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Mobile phone</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Bluetooth speaker</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Yo-Yo test audio soundtrack (available on YouTube)</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Mingle input form</span>
+      </li>
+    </ul>
+
+    <h2>Setup</h2>
+    <p>You need a large free space &mdash; minimum 25m deep.</p>
+    <p>For each player, place 3 cones in a line:</p>
+    <ul>
+      <li><strong>Cone 1:</strong> 0m (middle cone &mdash; start/finish)</li>
+      <li><strong>Cone 2:</strong> 5m behind the middle cone (recovery cone)</li>
+      <li><strong>Cone 3:</strong> 20m in front of the middle cone (far cone)</li>
+    </ul>
+    <p>Use the sideline and middle line of the field as reference points to keep the rows straight. Make sure all players can hear the speaker &mdash; a portable bluetooth speaker is essential.</p>
+
+    <figure class="setup-diagram">
+      <img src="Visuals/Layout Stamina.png" alt="Yo-Yo Intermittent Recovery Test setup diagram showing rows of 3 cones per player with 5m recovery zone and 20m shuttle distance">
+      <figcaption>Yo-Yo IR Test — cone layout with 5m recovery zone and 20m shuttle distance</figcaption>
+    </figure>
+
+    <h2>Execution</h2>
+    <ol class="steps">
+      <li><span>All players start at the <strong>middle cone</strong> (0m).</span></li>
+      <li><span>On the <strong>beep</strong>, players run to the <strong>far cone</strong> (20m) and back to the middle.</span></li>
+      <li><span>A <strong>warning beep</strong> sounds at the halfway point (when players should be at the far cone).</span></li>
+      <li><span>Players must return to the middle cone <strong>before the next loud beep</strong>.</span></li>
+      <li><span>After each shuttle, players walk to the <strong>recovery cone</strong> (5m) and back. This is the active recovery period.</span></li>
+      <li><span>The test continues with increasing speed.</span></li>
+      <li><span>If a player fails to make it back in time, they receive a <strong>warning</strong>. The second time they fail, they are <strong>out</strong>.</span></li>
+      <li><span>Record the <strong>last successfully completed level</strong> for each player in the Mingle input form.</span></li>
+    </ol>
+  </div>
+  <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- ORGANIZING VIEW                                -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="view-organizing" class="view">
+  <div class="detail-header">
+    <div class="detail-header-inner">
+      <span class="detail-icon">&#128203;</span>
+      <h1>Organizing your session</h1>
+      <p>Everything you need to plan, prepare, and run a smooth test day</p>
+    </div>
+  </div>
+  <div class="container detail-body">
+    <button class="back-btn" onclick="showView('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to overview
+    </button>
+
+    <h2>Before the session</h2>
+
+    <h3>1. Choose your format</h3>
+    <p>You have two options for running the tests:</p>
+    <p><strong>Option A: Full battery in one training session.</strong> All 3 tests in &plusmn;50-60 minutes. This is the recommended approach &mdash; you get all your data in one go and players only need to "show up ready" once.</p>
+    <p><strong>Option B: Spread tests across multiple trainings.</strong> Pick individual tests per session. This works if you're short on time or volunteers, but keep in mind that results are most comparable when players are tested under similar conditions (same warm-up, same fatigue level).</p>
+
+    <h3>2. Get your volunteers</h3>
+    <p>You need at least 2 people to run the full battery &mdash; one per group. Ideally this is the head coach plus an assistant coach or parent volunteer. Their roles:</p>
+    <ul>
+      <li><strong>Station 1 (Sprint):</strong> Operate the phone camera (filming attempts) and manage the queue of players. No times need to be recorded during the session &mdash; everything is extracted from the video afterwards.</li>
+      <li><strong>Station 2 (Illinois):</strong> Operate a stopwatch, call out times, and enter results into the Mingle input form.</li>
+    </ul>
+    <p>For the Yo-Yo test, both volunteers work together &mdash; one operates the speaker/audio, the other tracks which players drop out and at which level.</p>
+
+    <h3>3. Prepare player groups</h3>
+    <p>Divide players into 2 groups, arranged alphabetically. This makes it much easier to track results and match video files to the right player later. Share the group lists with your volunteers before the session.</p>
+
+    <h3>4. Collect player information</h3>
+    <p>Before the session, collect the following from each player: <strong>age</strong>, <strong>gender</strong>, and <strong>preferred playing position</strong>. This information is needed to calculate benchmarks &mdash; without it, some results can't be compared to reference values. If a player prefers not to share, that's fine, but their benchmark comparison will be limited.</p>
+
+    <h3>5. Gather equipment</h3>
+    <p>Here's your full checklist:</p>
+    <ul class="checklist" id="checklist-session">
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text"><strong>&plusmn;70 cones</strong> (8 for Illinois, 4 for Sprint, 3 per player for Yo-Yo &mdash; players cannot share Yo-Yo cones)</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Measuring tape (or measuring app on iPhone)</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">2 fully charged mobile phones (1 for filming sprints at 60fps, 1 for stopwatch/input form)</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Bluetooth speaker (for Yo-Yo test audio)</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Mingle input form (downloaded and ready)</span>
+      </li>
+    </ul>
+
+    <h3>6. Prepare the filming phone</h3>
+    <p>The sprint test requires video at 60fps. Before the session, make sure the filming phone is set up correctly:</p>
+    <ul>
+      <li><strong>iPhone:</strong> Settings &rarr; Camera &rarr; Record Video &rarr; 1080p at 60fps. Also set Formats to "Most Compatible" and Transfer settings to "Keep Originals." (See the Sprint test chapter for full details.)</li>
+      <li><strong>Android:</strong> Open camera app &rarr; Video settings &rarr; set to 1080p 60fps.</li>
+    </ul>
+    <p>Check that both phones have enough storage space for video (&plusmn;1GB should be plenty).</p>
+
+    <h3>7. Inform the players</h3>
+    <p>Before the session, let players know:</p>
+    <ul>
+      <li>What the tests are and why you're doing them</li>
+      <li>They should come ready to give maximum effort</li>
+      <li>They should wear their normal football boots</li>
+    </ul>
+
+    <h2>On the day: session flow</h2>
+
+    <div class="flow-step">
+      <div class="flow-step-header">
+        <span class="flow-step-badge">Step 1</span>
+        <span class="flow-step-title">Warm-up + set up (15 minutes)</span>
+      </div>
+      <p>While players do their normal warm-up (jogging, dynamic stretching, short sprints), the volunteers set up the two test stations on the field.</p>
+      <p><strong>Field layout:</strong> Use half a football field. Set up the Sprint along the long line of the 16m area &mdash; this gives you a straight 30m line with clear markings as reference. Set up the Illinois Agility Test in the center of the half, between the 16m area and the halfway line. Leave the remaining space for the Yo-Yo test.</p>
+      <figure class="setup-diagram">
+        <img src="Visuals/Layout Test Battery.png" alt="Field layout diagram showing Sprint along the 16m line, Illinois Agility in the upper corner, and Yo-Yo Stamina test in the remaining space">
+        <figcaption>Recommended field layout — all three test stations on half a pitch</figcaption>
+      </figure>
+      <div class="callout">
+        <strong>Tip</strong>
+        Artificial grass is preferred. These tests &mdash; especially the Illinois &mdash; can tear up natural grass if the field is soft.
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-step-header">
+        <span class="flow-step-badge">Step 2</span>
+        <span class="flow-step-title">Group tests &mdash; Round 1 (&plusmn;15 minutes)</span>
+      </div>
+      <p>Split into groups and start:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Group 1</th><th>Group 2</th></tr></thead>
+          <tbody><tr><td>30m Sprint (3 attempts per player)</td><td>Illinois Agility Test (2 attempts per player)</td></tr></tbody>
+        </table>
+      </div>
+      <p>Each player runs, walks back, and waits for their next turn. Keep the queue moving &mdash; alphabetical order helps.</p>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-step-header">
+        <span class="flow-step-badge">Step 3</span>
+        <span class="flow-step-title">Group tests &mdash; Round 2 (&plusmn;15 minutes)</span>
+      </div>
+      <p>Swap the groups:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Group 1</th><th>Group 2</th></tr></thead>
+          <tbody><tr><td>Illinois Agility Test (2 attempts)</td><td>30m Sprint (3 attempts)</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-step-header">
+        <span class="flow-step-badge">Step 4</span>
+        <span class="flow-step-title">Short break (5 minutes)</span>
+      </div>
+      <p>Give players time to catch their breath, drink water, and recover before the stamina test. Use this time to set up the Yo-Yo cones &mdash; remember, each player needs their own set of 3 cones.</p>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-step-header">
+        <span class="flow-step-badge">Step 5</span>
+        <span class="flow-step-title">Yo-Yo Intermittent Recovery Test (&plusmn;25 minutes)</span>
+      </div>
+      <p>All players do this together. Both volunteers are free now &mdash; one manages the speaker/audio, the other tracks results (noting which players drop out and at which level).</p>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-step-header">
+        <span class="flow-step-badge">Step 6</span>
+        <span class="flow-step-title">After the session</span>
+      </div>
+      <p>Back home or at the club:</p>
+      <ul>
+        <li><strong>Sprint videos:</strong> Transfer videos to your computer via USB cable (not AirDrop or cloud). Rename files to a clear format: <code>Sprint_Group1_Attempt1</code>, <code>Sprint_Group1_Attempt2</code>, etc. Process the videos using QuickTime Player to extract timestamps. (See the Sprint test chapter for the full workflow.)</li>
+        <li><strong>Illinois times:</strong> Verify all stopwatch times are entered correctly in the Mingle input form.</li>
+        <li><strong>Yo-Yo scores:</strong> Verify all final levels are recorded in the Mingle input form.</li>
+        <li><strong>Analyze:</strong> The Mingle input form calculates your results automatically. Review them, compare to benchmarks, and &mdash; most importantly &mdash; decide what this means for your next training sessions.</li>
+      </ul>
+    </div>
+  </div>
+  <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- BENCHMARKS VIEW                                -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="view-benchmarks" class="view">
+  <div class="detail-header">
+    <div class="detail-header-inner">
+      <span class="detail-icon">&#128200;</span>
+      <h1>Understanding benchmarks</h1>
+      <p>How to read and use your players' benchmark scores</p>
+    </div>
+  </div>
+  <div class="container detail-body">
+    <button class="back-btn" onclick="showView('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to overview
+    </button>
+
+    <p>When your test results are processed &mdash; either through the Mingle input form or the Google Sheet &mdash; each player's performance is compared to a benchmark. This tells you how they performed relative to other players.</p>
+
+    <h2>How it works</h2>
+    <p>Benchmarks are based on <strong>percentile scores</strong>. A percentile tells you what percentage of players scored equal to or lower than a given result. For example, if a player's sprint acceleration is in the 75th percentile, that means they were faster than 75% of players in their reference group.</p>
+    <p>Mingle translates percentiles into easy-to-understand categories:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Category</th><th>Percentile</th><th>What it means</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Poor</strong></td><td>&le;10th</td><td>Well below average &mdash; priority area for improvement</td></tr>
+          <tr><td><strong>Fair</strong></td><td>&le;25th</td><td>Below average &mdash; room for improvement</td></tr>
+          <tr><td><strong>Below average</strong></td><td>&le;45th</td><td>Slightly below the midpoint</td></tr>
+          <tr><td><strong>Average</strong></td><td>&le;55th</td><td>In the middle of the pack</td></tr>
+          <tr><td><strong>Above average</strong></td><td>&le;75th</td><td>Better than most players in this group</td></tr>
+          <tr><td><strong>Good</strong></td><td>&le;90th</td><td>Strong performance</td></tr>
+          <tr><td><strong>Excellent</strong></td><td>&gt;90th</td><td>Exceptional &mdash; among the top performers</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>What are players compared to?</h2>
+    <p>Currently, benchmarks are based on <strong>age group</strong> and <strong>gender</strong>. So a 14-year-old boy is compared to other boys in the same age range &mdash; not to seniors or adult women. This makes the comparison fair and meaningful.</p>
+    <p>The benchmark data comes from performance tests conducted with football teams across the Netherlands and is continuously updated as more teams participate. The more teams test, the more accurate and representative the benchmarks become.</p>
+    <p>In the future, Mingle aims to refine benchmarks further &mdash; taking into account playing level, exact age, and playing position for even more precise comparisons.</p>
+
+    <h2>Entering results in Mingle</h2>
+    <p>Currently, test results are processed outside of the Mingle app using the input form and Google Sheet. However, Mingle is working on making it possible to enter performance test results directly into player profiles within the app &mdash; including tests done in the past. This feature is on the roadmap for the upcoming season, and will make it much easier to track player development over time right where you already manage your team.</p>
+
+    <h2>What to do with the results</h2>
+    <p>The benchmark category isn't a judgment &mdash; it's a starting point. Here's how to use it:</p>
+    <ul>
+      <li><strong>Identify strengths and weaknesses.</strong> A player who scores "Excellent" on stamina but "Fair" on acceleration has a clear profile. Use that to tailor advice and training focus.</li>
+      <li><strong>Track progress over time.</strong> A player who moves from "Below average" to "Above average" over a season is making real, measurable progress &mdash; and that's motivating for both the player and the coach.</li>
+      <li><strong>Compare within your team.</strong> Even without looking at the broader benchmark, knowing the spread within your own squad helps you understand your team's physical profile and where the gaps are.</li>
+    </ul>
+  </div>
+  <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                     -->
+<!-- ══════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── View switching ────────────────────────── */
+  var currentView = 'home';
+
+  window.showView = function (id) {
+    var oldEl = document.getElementById('view-' + currentView);
+    var newEl = document.getElementById('view-' + id);
+    if (!newEl || id === currentView) return;
+
+    // Update topbar breadcrumb
+    var sectionEl = document.getElementById('topbar-section');
+    var labels = {
+      home: 'Performance Testing Guide',
+      sprint: '30m Sprint',
+      illinois: 'Illinois Agility Test',
+      yoyo: 'Yo-Yo IR Test',
+      organizing: 'Organizing your session',
+      benchmarks: 'Understanding benchmarks'
+    };
+    sectionEl.textContent = labels[id] || 'Performance Testing Guide';
+
+    // Fade out old
+    oldEl.classList.remove('visible');
+
+    setTimeout(function () {
+      oldEl.classList.remove('active');
+      newEl.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // Trigger reflow then fade in
+      void newEl.offsetWidth;
+      newEl.classList.add('visible');
+      currentView = id;
+
+      // Update URL hash
+      if (id === 'home') {
+        history.pushState(null, '', window.location.pathname);
+      } else {
+        history.pushState(null, '', '#' + id);
+      }
+    }, 200);
+  };
+
+  // Handle back/forward navigation
+  window.addEventListener('popstate', function () {
+    var hash = window.location.hash.replace('#', '');
+    var target = hash || 'home';
+    var el = document.getElementById('view-' + target);
+    if (el) {
+      var oldEl = document.getElementById('view-' + currentView);
+      oldEl.classList.remove('visible');
+      setTimeout(function () {
+        oldEl.classList.remove('active');
+        el.classList.add('active');
+        void el.offsetWidth;
+        el.classList.add('visible');
+        currentView = target;
+        window.scrollTo({ top: 0, behavior: 'instant' });
+
+        var sectionEl = document.getElementById('topbar-section');
+        var labels = {
+          home: 'Performance Testing Guide',
+          sprint: '30m Sprint',
+          illinois: 'Illinois Agility Test',
+          yoyo: 'Yo-Yo IR Test',
+          organizing: 'Organizing your session',
+          benchmarks: 'Understanding benchmarks'
+        };
+        sectionEl.textContent = labels[target] || 'Performance Testing Guide';
+      }, 200);
+    }
+  });
+
+  // Handle direct linking via hash
+  var initialHash = window.location.hash.replace('#', '');
+  if (initialHash && document.getElementById('view-' + initialHash)) {
+    var homeEl = document.getElementById('view-home');
+    homeEl.classList.remove('active', 'visible');
+    var targetEl = document.getElementById('view-' + initialHash);
+    targetEl.classList.add('active');
+    void targetEl.offsetWidth;
+    targetEl.classList.add('visible');
+    currentView = initialHash;
+
+    var sectionEl = document.getElementById('topbar-section');
+    var labels = {
+      home: 'Performance Testing Guide',
+      sprint: '30m Sprint',
+      illinois: 'Illinois Agility Test',
+      yoyo: 'Yo-Yo IR Test',
+      organizing: 'Organizing your session',
+      benchmarks: 'Understanding benchmarks'
+    };
+    sectionEl.textContent = labels[initialHash] || 'Performance Testing Guide';
+  }
+
+  /* ── Checklist toggle ──────────────────────── */
+  window.toggleCheck = function (li) {
+    li.classList.toggle('checked');
+  };
+})();
+</script>
+
+</body>
+</html>
