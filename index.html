@@ -270,6 +270,46 @@
     width: 13px;
     height: 13px;
   }
+  .badge-official {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--green-800);
+    background: var(--green-100);
+    padding: 4px 10px;
+    border-radius: 50px;
+    margin-bottom: 12px;
+  }
+  .badge-official svg {
+    width: 12px;
+    height: 12px;
+  }
+  .card .badge-official {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    color: #7c3aed;
+    background: #ede9fe;
+    padding: 3px 8px;
+    margin-bottom: 0;
+  }
+  .card .badge-official svg {
+    width: 10px;
+    height: 10px;
+  }
+  .detail-header .badge-official {
+    color: var(--green-100);
+    background: rgba(255,255,255,0.15);
+    margin-bottom: 14px;
+  }
 
   /* ── Info cards (organizing / benchmarks) ───── */
   .info-cards {
@@ -673,11 +713,12 @@
     <!-- Test cards -->
     <div class="section-header">
       <h2>What's in this guide</h2>
-      <p>Three field-tested performance tests you can run with basic equipment and a mobile phone.</p>
+      <p>Four field-tested performance tests you can run with basic equipment and a mobile phone.</p>
     </div>
 
     <div class="cards-grid">
       <div class="card" onclick="showView('sprint')">
+        <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Mingle Official Test</span>
         <span class="card-icon">&#9889;</span>
         <h3>30m Sprint</h3>
         <p class="card-subtitle">Acceleration &amp; top speed</p>
@@ -687,6 +728,7 @@
         </span>
       </div>
       <div class="card" onclick="showView('illinois')">
+        <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Mingle Official Test</span>
         <span class="card-icon">&#128256;</span>
         <h3>Illinois Agility Test</h3>
         <p class="card-subtitle">Agility &amp; change of direction</p>
@@ -696,12 +738,22 @@
         </span>
       </div>
       <div class="card" onclick="showView('yoyo')">
+        <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Mingle Official Test</span>
         <span class="card-icon">&#129707;</span>
         <h3>Yo-Yo Intermittent Recovery Test</h3>
         <p class="card-subtitle">Football-specific endurance</p>
         <span class="card-meta">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           &plusmn;25 min
+        </span>
+      </div>
+      <div class="card" onclick="showView('illinois-ball')">
+        <span class="card-icon">&#9917;</span>
+        <h3>Illinois Agility Test (with Ball)</h3>
+        <p class="card-subtitle">Dribbling speed &amp; ball control under pressure</p>
+        <span class="card-meta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          &plusmn;15 min
         </span>
       </div>
     </div>
@@ -740,6 +792,7 @@
 <div id="view-sprint" class="view">
   <div class="detail-header">
     <div class="detail-header-inner">
+      <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Mingle Official Test</span>
       <span class="detail-icon">&#9889;</span>
       <h1>30m Sprint</h1>
       <p>Acceleration &amp; top speed &middot; &plusmn;10 minutes</p>
@@ -860,6 +913,11 @@
       <strong>Why timestamps instead of frame counting?</strong>
       Timestamps are frame-rate-independent. Whether someone accidentally recorded at 30fps or correctly at 60fps, the timestamps are still accurate &mdash; the only difference is precision (30fps gives ~33ms steps vs 60fps gives ~17ms steps). 60fps is still recommended for better precision, but the calculation works correctly either way.
     </div>
+
+    <div class="callout">
+      <strong>Benchmark data available</strong>
+      This is a Mingle Official Test. Results are automatically compared to age- and gender-based benchmarks when submitted through the Mingle input form.
+    </div>
   </div>
   <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
 </div>
@@ -870,6 +928,7 @@
 <div id="view-illinois" class="view">
   <div class="detail-header">
     <div class="detail-header-inner">
+      <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Mingle Official Test</span>
       <span class="detail-icon">&#128256;</span>
       <h1>Illinois Agility Test</h1>
       <p>Agility &amp; change of direction &middot; &plusmn;15 minutes</p>
@@ -928,6 +987,89 @@
       <li><span>Each player gets <strong>2 attempts</strong>.</span></li>
       <li><span>Enter the times into the Mingle input form.</span></li>
     </ol>
+
+    <div class="callout">
+      <strong>Benchmark data available</strong>
+      This is a Mingle Official Test. Results are automatically compared to age- and gender-based benchmarks when submitted through the Mingle input form.
+    </div>
+  </div>
+  <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- ILLINOIS AGILITY (WITH BALL) VIEW               -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="view-illinois-ball" class="view">
+  <div class="detail-header">
+    <div class="detail-header-inner">
+      <span class="detail-icon">&#9917;</span>
+      <h1>Illinois Agility Test (with Ball)</h1>
+      <p>Dribbling speed &amp; ball control under pressure &middot; &plusmn;15 minutes</p>
+    </div>
+  </div>
+  <div class="container detail-body">
+    <button class="back-btn" onclick="showView('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to overview
+    </button>
+
+    <h2>Why this test?</h2>
+    <p>Running fast through cones is one thing &mdash; doing it with a ball at your feet is something else entirely. The Illinois Agility Test with Ball takes the standard agility course and adds a football, turning it into a measure of <strong>technical control under physical pressure</strong>. The skill isn't just dribbling &mdash; it's dribbling while changing direction at speed, keeping the ball close through sharp turns, and maintaining composure when your body is working hard.</p>
+    <p>The real value comes from comparing a player's time <strong>with</strong> the ball to their time <strong>without</strong> it. The gap between the two tells you how much speed a player loses when they have to control a ball. A small gap means the player can move almost as freely with the ball as without it &mdash; a sign of strong technical ability. A large gap reveals that ball control breaks down under pressure, even if the player looks comfortable in low-intensity drills.</p>
+    <p>This test is especially relevant for <strong>wingers, attacking midfielders, and dribblers</strong> &mdash; players who need to beat opponents in tight spaces while maintaining speed. The good news: the gap between with-ball and without-ball agility is highly trainable. Targeted dribbling drills through cones, small-sided games with tight spaces, and 1v1 exercises can all narrow that difference over time.</p>
+
+    <h2>What you need</h2>
+    <ul class="checklist" id="checklist-illinois-ball">
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">8 cones</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Measuring tape</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Stopwatch</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">1 football per player</span>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="checklist-box"><svg class="checklist-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="checklist-text">Mingle input form</span>
+      </li>
+    </ul>
+
+    <h2>Setup</h2>
+    <p>The course is identical to the regular Illinois Agility Test &mdash; a <strong>10m &times; 5m rectangle</strong>.</p>
+    <ul>
+      <li>Place <strong>4 cones</strong> at the corners of the rectangle.</li>
+      <li>Place <strong>4 cones</strong> in a straight line down the center, spaced <strong>3.3m apart</strong>.</li>
+    </ul>
+
+    <figure class="setup-diagram">
+      <img src="Visuals/Layout Illinois.png" alt="Illinois Agility Test setup diagram showing a 10m by 5m rectangle with 4 corner cones and 4 center cones spaced 3.3m apart, with the weaving route marked">
+      <figcaption>Illinois Agility Test (with Ball) — same course layout as the standard Illinois test</figcaption>
+    </figure>
+
+    <h2>Execution</h2>
+    <ol class="steps">
+      <li><span>The player starts in a <strong>lying position</strong> at the start line, hands by their shoulders, with the ball placed directly in front of them.</span></li>
+      <li><span>On the signal, the player gets up and <strong>dribbles the football</strong> to the first center cone.</span></li>
+      <li><span>The player <strong>weaves zigzag</strong> through the 4 center cones while keeping the ball under close control.</span></li>
+      <li><span>At the end, the player dribbles back to the finish line.</span></li>
+      <li><span>The ball must stay <strong>within playing distance</strong> at all times. If the ball runs too far away from the player (more than ~2 meters), the attempt is invalid.</span></li>
+      <li><span>Record the time with a stopwatch.</span></li>
+      <li><span>Each player gets <strong>2 attempts</strong>.</span></li>
+      <li><span>Enter the times into the Mingle input form.</span></li>
+    </ol>
+
+    <div class="callout">
+      <strong>Recommendation: always test alongside the regular Illinois test</strong>
+      The real insight from this test comes from the comparison. Run the standard Illinois Agility Test (without ball) and this variant in the same session. The difference in time reveals how much speed a player loses when controlling the ball &mdash; a metric that's far more meaningful than either time alone. This &ldquo;agility gap&rdquo; gives you a clear, trainable target for technical development.
+    </div>
   </div>
   <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
 </div>
@@ -938,6 +1080,7 @@
 <div id="view-yoyo" class="view">
   <div class="detail-header">
     <div class="detail-header-inner">
+      <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Mingle Official Test</span>
       <span class="detail-icon">&#129707;</span>
       <h1>Yo-Yo Intermittent Recovery Test</h1>
       <p>Football-specific endurance &middot; &plusmn;25 minutes</p>
@@ -1004,6 +1147,11 @@
       <li><span>If a player fails to make it back in time, they receive a <strong>warning</strong>. The second time they fail, they are <strong>out</strong>.</span></li>
       <li><span>Record the <strong>last successfully completed level</strong> for each player in the Mingle input form.</span></li>
     </ol>
+
+    <div class="callout">
+      <strong>Benchmark data available</strong>
+      This is a Mingle Official Test. Results are automatically compared to age- and gender-based benchmarks when submitted through the Mingle input form.
+    </div>
   </div>
   <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
 </div>
@@ -1187,6 +1335,11 @@
 
     <p>When your test results are processed &mdash; either through the Mingle input form or the Google Sheet &mdash; each player's performance is compared to a benchmark. This tells you how they performed relative to other players.</p>
 
+    <div class="callout">
+      <strong>Official tests only</strong>
+      Benchmark data is currently available for Mingle Official Tests only: the 30m Sprint, Illinois Agility Test, and Yo-Yo Intermittent Recovery Test.
+    </div>
+
     <h2>How it works</h2>
     <p>Benchmarks are based on <strong>percentile scores</strong>. A percentile tells you what percentage of players scored equal to or lower than a given result. For example, if a player's sprint acceleration is in the 75th percentile, that means they were faster than 75% of players in their reference group.</p>
     <p>Mingle translates percentiles into easy-to-understand categories:</p>
@@ -1248,6 +1401,7 @@
       home: 'Performance Testing Guide',
       sprint: '30m Sprint',
       illinois: 'Illinois Agility Test',
+      'illinois-ball': 'Illinois Agility (with Ball)',
       yoyo: 'Yo-Yo IR Test',
       organizing: 'Organizing your session',
       benchmarks: 'Understanding benchmarks'
@@ -1297,6 +1451,7 @@
           home: 'Performance Testing Guide',
           sprint: '30m Sprint',
           illinois: 'Illinois Agility Test',
+          'illinois-ball': 'Illinois Agility (with Ball)',
           yoyo: 'Yo-Yo IR Test',
           organizing: 'Organizing your session',
           benchmarks: 'Understanding benchmarks'
@@ -1322,6 +1477,7 @@
       home: 'Performance Testing Guide',
       sprint: '30m Sprint',
       illinois: 'Illinois Agility Test',
+      'illinois-ball': 'Illinois Agility (with Ball)',
       yoyo: 'Yo-Yo IR Test',
       organizing: 'Organizing your session',
       benchmarks: 'Understanding benchmarks'
