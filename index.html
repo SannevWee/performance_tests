@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   *, *::before, *::after {
     margin: 0;
@@ -663,6 +664,608 @@
     background: var(--gray-50);
   }
 
+  /* ── Input form ─────────────────────────────── */
+  .input-form-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-100);
+  }
+  .input-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-700);
+  }
+  .form-group .required {
+    color: #ef4444;
+    margin-left: 2px;
+  }
+  .form-group input,
+  .form-group select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 10px 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--gray-800);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    outline: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--green-600);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+  }
+  .form-group input.error,
+  .form-group select.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  }
+  .form-group .error-msg {
+    font-size: 0.78rem;
+    color: #b91c1c;
+    display: none;
+  }
+  .form-group input.error ~ .error-msg,
+  .form-group select.error ~ .error-msg {
+    display: block;
+  }
+  .input-top-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .clear-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--gray-500);
+    background: none;
+    border: 1px solid var(--gray-200);
+    padding: 6px 14px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .clear-btn:hover {
+    color: #b91c1c;
+    border-color: #ef4444;
+    background: #fef2f2;
+  }
+  /* ── CTA card (home) ────────────────────────── */
+  .cta-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border: 1px solid var(--gray-100);
+    border-left: 4px solid var(--green-700);
+  }
+  .cta-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--green-100);
+    border-left-color: var(--green-600);
+    background: var(--green-50);
+  }
+  .cta-card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: var(--green-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.5rem;
+  }
+  .cta-card:hover .cta-card-icon {
+    background: var(--green-100);
+  }
+  .cta-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 3px;
+  }
+  .cta-card p {
+    color: var(--gray-500);
+    font-size: 0.88rem;
+  }
+  .cta-card-arrow {
+    margin-left: auto;
+    color: var(--gray-300);
+    transition: color var(--transition), transform var(--transition);
+    flex-shrink: 0;
+  }
+  .cta-card:hover .cta-card-arrow {
+    color: var(--green-700);
+    transform: translateX(3px);
+  }
+
+  .input-section {
+    margin-bottom: 32px;
+  }
+  .input-section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--green-100);
+  }
+
+  /* ── Test selection checkboxes ─────────────── */
+  .test-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .test-select-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--white);
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none;
+  }
+  .test-select-option:hover {
+    border-color: var(--green-600);
+    background: var(--green-50);
+  }
+  .test-select-option.selected {
+    border-color: var(--green-700);
+    background: var(--green-50);
+  }
+  .test-select-box {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--gray-300);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+  }
+  .test-select-option.selected .test-select-box {
+    background: var(--green-700);
+    border-color: var(--green-700);
+  }
+  .test-select-check {
+    display: none;
+    color: white;
+  }
+  .test-select-option.selected .test-select-check {
+    display: block;
+  }
+  .test-select-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .test-select-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gray-800);
+  }
+  .test-select-error {
+    font-size: 0.82rem;
+    color: #b91c1c;
+    margin-top: 10px;
+    display: none;
+  }
+  .test-select-error.visible {
+    display: block;
+  }
+
+  /* ── Player cards ──────────────────────────── */
+  .player-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-100);
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .player-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .player-card-number {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--green-800);
+  }
+  .player-remove-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--gray-500);
+    background: none;
+    border: 1px solid var(--gray-200);
+    padding: 5px 12px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .player-remove-btn:hover {
+    color: #b91c1c;
+    border-color: #ef4444;
+    background: #fef2f2;
+  }
+  .add-player-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--green-800);
+    background: var(--white);
+    border: 2px dashed var(--gray-300);
+    padding: 14px 24px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    width: 100%;
+    justify-content: center;
+  }
+  .add-player-btn:hover {
+    border-color: var(--green-600);
+    background: var(--green-50);
+    color: var(--green-900);
+  }
+  .tooltip-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--gray-200);
+    color: var(--gray-600);
+    font-size: 0.65rem;
+    font-weight: 700;
+    cursor: help;
+    flex-shrink: 0;
+  }
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    background: var(--gray-900);
+    color: var(--white);
+    font-size: 0.78rem;
+    font-weight: 400;
+    line-height: 1.45;
+    padding: 10px 14px;
+    border-radius: 8px;
+    width: 280px;
+    z-index: 50;
+    box-shadow: var(--shadow-lg);
+  }
+  .tooltip-trigger:hover .tooltip-text {
+    display: block;
+  }
+
+  /* ── Results grid ──────────────────────────── */
+  .results-grid-wrap {
+    overflow-x: auto;
+    margin: 0 0 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    -webkit-overflow-scrolling: touch;
+  }
+  .results-grid {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  .results-grid thead {
+    background: var(--green-800);
+  }
+  .results-grid th {
+    color: var(--white);
+    font-weight: 600;
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .results-grid-group-row th {
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  .sprint-group { background: #166534; }
+  .illinois-group { background: #1e40af; }
+  .yoyo-group { background: #7c2d12; }
+  .results-grid-player-col {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background: var(--green-800);
+    text-align: left !important;
+    min-width: 120px;
+    font-weight: 700;
+  }
+  .results-grid tbody .results-grid-player-col {
+    background: var(--white);
+    border-right: 2px solid var(--gray-200);
+    color: var(--gray-800);
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+  .results-grid tbody tr:nth-child(even) .results-grid-player-col {
+    background: var(--gray-50);
+  }
+  .results-grid td {
+    padding: 6px 4px;
+    border-bottom: 1px solid var(--gray-100);
+    text-align: center;
+    vertical-align: middle;
+  }
+  .results-grid tbody tr:nth-child(even) {
+    background: var(--gray-50);
+  }
+  .grid-input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 7px 8px;
+    border: 1px solid var(--gray-200);
+    border-radius: 6px;
+    background: var(--white);
+    color: var(--gray-800);
+    width: 90px;
+    text-align: center;
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .grid-input:focus {
+    border-color: var(--green-600);
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.12);
+  }
+  .grid-input[type="number"] {
+    width: 70px;
+  }
+  .results-grid-calc-cell {
+    font-size: 0.78rem;
+    color: var(--gray-500);
+    white-space: nowrap;
+    min-width: 140px;
+    padding: 6px 8px;
+  }
+  .results-grid-calc-cell b {
+    color: var(--gray-800);
+  }
+  .results-grid-calc-cell.best-result {
+    background: var(--green-50);
+    color: var(--green-900);
+  }
+  .results-grid-calc-cell.best-result b {
+    color: var(--green-800);
+  }
+  .results-grid-calc-col {
+    background: rgba(0,0,0,0.15);
+    font-style: italic;
+  }
+  .grid-add-btn, .grid-remove-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 6px;
+    padding: 0;
+    line-height: 1;
+    transition: all var(--transition);
+    vertical-align: middle;
+  }
+  .grid-add-btn:hover {
+    background: rgba(255,255,255,0.35);
+  }
+  .grid-remove-btn {
+    font-size: 1rem;
+    margin-left: 4px;
+  }
+  .grid-remove-btn:hover {
+    background: rgba(239,68,68,0.5);
+    border-color: rgba(239,68,68,0.6);
+  }
+  .add-results-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--green-700);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-top: 16px;
+  }
+  .add-results-btn:hover:not(:disabled) {
+    background: var(--green-800);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+  }
+  .add-results-btn:disabled {
+    background: var(--gray-300);
+    cursor: not-allowed;
+  }
+  .add-results-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  .download-csv-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--green-800);
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    padding: 10px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .download-csv-btn:hover {
+    background: var(--green-50);
+    border-color: var(--green-700);
+  }
+  .download-csv-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  .submit-export-section {
+    margin-top: 40px;
+    padding: 28px 24px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+  }
+  .submit-export-section h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 0 0 16px;
+  }
+  .consent-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .consent-row input[type="checkbox"] {
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--green-700);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .consent-row label {
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  .submit-export-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .csv-attach-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: #fefce8;
+    border: 1px solid #ca8a04;
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-top: 20px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #854d0e;
+  }
+  .csv-attach-notice .notice-icon {
+    flex-shrink: 0;
+    font-size: 1.1rem;
+  }
+  .email-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--white);
+    background: var(--green-700);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .email-submit-btn:hover:not(:disabled) {
+    background: var(--green-800);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+  }
+  .email-submit-btn:disabled {
+    background: var(--gray-300);
+    cursor: not-allowed;
+  }
+  .email-submit-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  .results-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
   @media (max-width: 640px) {
     .hero {
       padding: 48px 20px 44px;
@@ -682,6 +1285,13 @@
     th, td {
       padding: 10px 12px;
       font-size: 0.82rem;
+    }
+    .input-form-grid {
+      grid-template-columns: 1fr;
+    }
+    .input-top-controls {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>
@@ -710,6 +1320,20 @@
   </section>
 
   <div class="container">
+    <!-- CTA: Record results -->
+    <div class="section-header">
+      <h2>Record your results</h2>
+      <p>Fill in test data and get instant rankings for your team.</p>
+    </div>
+    <div class="cta-card" onclick="showView('input')">
+      <div class="cta-card-icon">&#128221;</div>
+      <div>
+        <h3>Enter session results</h3>
+        <p>Record test data, see live rankings, and export results</p>
+      </div>
+      <svg class="cta-card-arrow" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+
     <!-- Test cards -->
     <div class="section-header">
       <h2>What's in this guide</h2>
@@ -790,6 +1414,7 @@
         <svg class="info-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
+
   </div>
 
   <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
@@ -1498,6 +2123,172 @@
 </div>
 
 <!-- ══════════════════════════════════════════════ -->
+<!-- INPUT FORM VIEW                                 -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="view-input" class="view">
+  <div class="detail-header">
+    <div class="detail-header-inner">
+      <span class="detail-icon">&#128203;</span>
+      <h1>Record Test Results</h1>
+      <p>Enter session details, player data, and test measurements</p>
+    </div>
+  </div>
+  <div class="container detail-body">
+
+    <div class="input-top-controls">
+      <button class="back-btn" onclick="showView('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to overview
+      </button>
+      <button class="clear-btn" onclick="clearSession()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Clear session
+      </button>
+    </div>
+
+    <!-- ── Session Info ───────────────────────── -->
+    <div class="input-section" id="section-session">
+      <h2 class="input-section-title">Session info</h2>
+      <div class="input-form-card">
+        <div class="input-form-grid">
+          <div class="form-group">
+            <label>Club name <span class="required">*</span></label>
+            <input type="text" id="input-club-name" placeholder="e.g. FC Voorbeeld" required>
+            <span class="error-msg">Club name is required</span>
+          </div>
+          <div class="form-group">
+            <label>Team name <span class="required">*</span></label>
+            <input type="text" id="input-team-name" placeholder="e.g. JO15-1" required>
+            <span class="error-msg">Team name is required</span>
+          </div>
+          <div class="form-group">
+            <label>Playing level <span class="required">*</span></label>
+            <select id="input-playing-level" required>
+              <option value="">Select level…</option>
+              <option value="Casual">Casual</option>
+              <option value="Performance">Performance</option>
+              <option value="Elite">Elite</option>
+              <option value="Semi-professional">Semi-professional</option>
+              <option value="Professional">Professional</option>
+            </select>
+            <span class="error-msg">Playing level is required</span>
+          </div>
+          <div class="form-group">
+            <label>Test date <span class="required">*</span></label>
+            <input type="date" id="input-test-date" required>
+            <span class="error-msg">Test date is required</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Test Selection ─────────────────────── -->
+    <div class="input-section" id="section-tests">
+      <h2 class="input-section-title">Tests performed</h2>
+      <div class="test-select-grid">
+        <div class="test-select-option" data-test="sprint" onclick="toggleTest(this)">
+          <div class="test-select-box">
+            <svg class="test-select-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="test-select-icon">&#9889;</span>
+          <span class="test-select-label">30m Sprint</span>
+        </div>
+        <div class="test-select-option" data-test="illinois" onclick="toggleTest(this)">
+          <div class="test-select-box">
+            <svg class="test-select-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="test-select-icon">&#128256;</span>
+          <span class="test-select-label">Illinois Agility Test</span>
+        </div>
+        <div class="test-select-option" data-test="yoyo" onclick="toggleTest(this)">
+          <div class="test-select-box">
+            <svg class="test-select-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="test-select-icon">&#129707;</span>
+          <span class="test-select-label">Yo-Yo Intermittent Recovery Test</span>
+        </div>
+      </div>
+      <p class="test-select-error" id="test-select-error">Please select at least one test</p>
+    </div>
+
+    <!-- ── Players ────────────────────────────── -->
+    <div class="input-section" id="section-players">
+      <h2 class="input-section-title">Players</h2>
+      <div id="players-container"></div>
+      <button class="add-player-btn" onclick="addPlayer()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add player
+      </button>
+    </div>
+
+    <!-- ── Add Results Button ──────────────────── -->
+    <button class="add-results-btn" id="add-results-btn" onclick="goToResults()" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      Add results
+    </button>
+
+  </div>
+  <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- INPUT RESULTS VIEW                              -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="view-input-results" class="view">
+  <div class="detail-header">
+    <div class="detail-header-inner">
+      <span class="detail-icon">&#128202;</span>
+      <h1 id="results-page-title">Enter Results</h1>
+      <p id="results-session-info"></p>
+    </div>
+  </div>
+  <div style="padding: 40px 20px 64px; max-width: 100%; overflow-x: hidden;">
+    <div class="results-header-bar">
+      <button class="back-btn" onclick="showView('input')" style="margin-bottom: 0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to setup
+      </button>
+    </div>
+    <div id="results-grid-container"></div>
+
+    <div class="submit-export-section">
+      <h3>Submit &amp; Export</h3>
+      <div class="consent-row">
+        <input type="checkbox" id="consent-checkbox" onchange="updateEmailBtn()">
+        <label for="consent-checkbox">I consent to sharing this data with Mingle Sport for the purpose of performance analysis and research. No full names are included.</label>
+      </div>
+      <div class="submit-export-btns">
+        <button class="email-submit-btn" id="email-submit-btn" onclick="submitViaEmail()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Submit via email
+        </button>
+        <button class="download-csv-btn" onclick="downloadCSV()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download CSV
+        </button>
+        <button class="download-csv-btn" onclick="downloadPDF()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Download PDF
+        </button>
+      </div>
+      <div class="csv-attach-notice">
+        <span class="notice-icon">&#128206;</span>
+        <span>Don't forget to attach your CSV file before sending. Use the Download CSV button below, then attach the file to the email.</span>
+      </div>
+      <div class="info-card" onclick="showView('benchmarks')" style="margin-top: 20px;">
+        <div class="info-card-icon">&#128200;</div>
+        <div>
+          <h3>Understanding benchmarks</h3>
+          <p>How to read and use your players' scores</p>
+        </div>
+        <svg class="info-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">Mingle Sport &mdash; Performance Testing Guide</footer>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
 <!-- JAVASCRIPT                                     -->
 <!-- ══════════════════════════════════════════════ -->
 <script>
@@ -1512,6 +2303,9 @@
     var newEl = document.getElementById('view-' + id);
     if (!newEl || id === currentView) return;
 
+    // Sync data before leaving current view
+    if (currentView === 'input') syncPlayersFromDOM();
+
     // Update topbar breadcrumb
     var sectionEl = document.getElementById('topbar-section');
     var labels = {
@@ -1521,6 +2315,8 @@
       'illinois-ball': 'Illinois Agility (with Ball)',
       yoyo: 'Yo-Yo IR Test',
       'vertical-jump': 'Vertical Jump',
+      input: 'Record Test Results',
+      'input-results': document.getElementById('input-club-name').value || 'Enter Results',
       organizing: 'Organizing your session',
       benchmarks: 'Understanding benchmarks'
     };
@@ -1538,6 +2334,11 @@
       void newEl.offsetWidth;
       newEl.classList.add('visible');
       currentView = id;
+
+      // Build results grid when entering results view
+      if (id === 'input-results') {
+        buildResultsGrid();
+      }
 
       // Update URL hash
       if (id === 'home') {
@@ -1571,6 +2372,9 @@
           illinois: 'Illinois Agility Test',
           'illinois-ball': 'Illinois Agility (with Ball)',
           yoyo: 'Yo-Yo IR Test',
+          'vertical-jump': 'Vertical Jump',
+          input: 'Record Test Results',
+          'input-results': 'Enter Results',
           organizing: 'Organizing your session',
           benchmarks: 'Understanding benchmarks'
         };
@@ -1598,6 +2402,8 @@
       'illinois-ball': 'Illinois Agility (with Ball)',
       yoyo: 'Yo-Yo IR Test',
       'vertical-jump': 'Vertical Jump',
+      input: 'Record Test Results',
+      'input-results': 'Enter Results',
       organizing: 'Organizing your session',
       benchmarks: 'Understanding benchmarks'
     };
@@ -1608,6 +2414,1068 @@
   window.toggleCheck = function (li) {
     li.classList.toggle('checked');
   };
+
+  /* ── Input form: state ───────────────────────── */
+  var sessionFieldIds = ['input-club-name', 'input-team-name', 'input-playing-level', 'input-test-date'];
+  var selectedTests = { sprint: false, illinois: false, yoyo: false };
+  var testLabels = { sprint: '30m Sprint', illinois: 'Illinois Agility Test', yoyo: 'Yo-Yo Intermittent Recovery Test' };
+  var players = [];
+  var playerIdCounter = 0;
+  var sprintAttempts = 1;
+  var illinoisAttempts = 1;
+
+  /* ── Yo-Yo lookup table ────────────────────── */
+  var yoyoTable = {
+    '5,1':40,'9,1':80,'11,1':120,'11,2':160,'12,1':200,'12,2':240,'12,3':280,
+    '13,1':320,'13,2':360,'13,3':400,'13,4':440,
+    '14,1':480,'14,2':520,'14,3':560,'14,4':600,'14,5':640,'14,6':680,'14,7':720,'14,8':760,
+    '15,1':800,'15,2':840,'15,3':880,'15,4':920,'15,5':960,'15,6':1000,'15,7':1040,'15,8':1080,
+    '16,1':1120,'16,2':1160,'16,3':1200,'16,4':1280,'16,5':1280,'16,6':1320,'16,7':1360,'16,8':1400,
+    '17,1':1440,'17,2':1480,'17,3':1520,'17,4':1560,'17,5':1600,'17,6':1640,'17,7':1680,'17,8':1720,
+    '18,1':1760,'18,2':1800,'18,3':1840,'18,4':1880,'18,5':1920,'18,6':1960,'18,7':2000,'18,8':2040,
+    '19,1':2080,'19,2':2120,'19,3':2160,'19,4':2200,'19,5':2240,'19,6':2280,'19,7':2320,'19,8':2360,
+    '20,1':2400,'20,2':2440,'20,3':2480,'20,4':2520,'20,5':2560,'20,6':2600,'20,7':2640,'20,8':2680
+  };
+
+  function getShuttlesForLevel(level) {
+    var shuttles = [];
+    for (var s = 1; s <= 8; s++) {
+      if (yoyoTable[level + ',' + s] !== undefined) shuttles.push(s);
+    }
+    return shuttles;
+  }
+
+  /* ── Timestamp parsing (MM:SS.mmm → seconds) ── */
+  function parseTimestamp(str) {
+    if (!str) return NaN;
+    str = str.trim();
+    // Accept M:SS.mmm or MM:SS.mmm or SS.mmm
+    var match = str.match(/^(?:(\d{1,2}):)?(\d{1,2})\.(\d{1,3})$/);
+    if (!match) return NaN;
+    var mins = match[1] ? parseInt(match[1], 10) : 0;
+    var secs = parseInt(match[2], 10);
+    var frac = match[3];
+    while (frac.length < 3) frac += '0';
+    return mins * 60 + secs + parseInt(frac, 10) / 1000;
+  }
+
+  function isValidTimestamp(str) {
+    return !isNaN(parseTimestamp(str));
+  }
+
+  /* ── Sprint calculations ───────────────────── */
+  function calcSprintAttempt(t1, t2, t3, t4) {
+    var s1 = parseTimestamp(t1), s2 = parseTimestamp(t2), s3 = parseTimestamp(t3), s4 = parseTimestamp(t4);
+    if (isNaN(s1) || isNaN(s2) || isNaN(s3) || isNaN(s4)) return null;
+    var accelTime = s2 - s1;
+    var maxTime = s4 - s3;
+    if (accelTime <= 0 || maxTime <= 0) return null;
+    return {
+      acceleration: (9 / accelTime) * 3.6,
+      maxSpeed: (10 / maxTime) * 3.6
+    };
+  }
+
+  /* ── Illinois calculations ─────────────────── */
+  function calcIllinoisAttempt(timeStr) {
+    var t = parseFloat(timeStr);
+    if (isNaN(t) || t <= 0) return null;
+    return { speed: (65 / t) * 3.6, time: t };
+  }
+
+  /* ── Yo-Yo calculations ────────────────────── */
+  function calcYoyo(level, shuttle) {
+    var key = level + ',' + shuttle;
+    var dist = yoyoTable[key];
+    if (dist === undefined) return null;
+    return { distance: dist, vo2max: dist * 0.0084 + 36.4 };
+  }
+
+  /* ── Input form: auto-save & restore ────────── */
+  function saveSession() {
+    syncPlayersFromDOM();
+    var data = {
+      clubName: document.getElementById('input-club-name').value,
+      teamName: document.getElementById('input-team-name').value,
+      playingLevel: document.getElementById('input-playing-level').value,
+      testDate: document.getElementById('input-test-date').value,
+      selectedTests: selectedTests,
+      players: players,
+      playerIdCounter: playerIdCounter,
+      sprintAttempts: sprintAttempts,
+      illinoisAttempts: illinoisAttempts
+    };
+    localStorage.setItem('mingle_session_data', JSON.stringify(data));
+  }
+
+  function readPlayerFields(pid) {
+    var el = document.getElementById('player-' + pid);
+    if (!el) return null;
+    var existing = players.find(function(p) { return p.id === pid; });
+    return {
+      id: pid,
+      nickname: el.querySelector('[data-field="nickname"]').value,
+      age: el.querySelector('[data-field="age"]').value,
+      gender: el.querySelector('[data-field="gender"]').value,
+      position: el.querySelector('[data-field="position"]').value,
+      sprint: existing ? existing.sprint : [['','','',''],['','','',''],['','','','']],
+      illinois: existing ? existing.illinois : ['','',''],
+      yoyoLevel: existing ? existing.yoyoLevel : '',
+      yoyoShuttle: existing ? existing.yoyoShuttle : ''
+    };
+  }
+
+  function syncPlayersFromDOM() {
+    players = players.map(function (p) {
+      return readPlayerFields(p.id) || p;
+    });
+  }
+
+  function onPlayerInput() {
+    syncPlayersFromDOM();
+    saveSession();
+  }
+
+  function restoreSession() {
+    var raw = localStorage.getItem('mingle_session_data');
+    if (!raw) return;
+    try {
+      var data = JSON.parse(raw);
+      if (data.clubName) document.getElementById('input-club-name').value = data.clubName;
+      if (data.teamName) document.getElementById('input-team-name').value = data.teamName;
+      if (data.playingLevel) document.getElementById('input-playing-level').value = data.playingLevel;
+      if (data.testDate) document.getElementById('input-test-date').value = data.testDate;
+      if (data.selectedTests) {
+        selectedTests = data.selectedTests;
+        document.querySelectorAll('.test-select-option').forEach(function (el) {
+          var test = el.getAttribute('data-test');
+          if (selectedTests[test]) el.classList.add('selected');
+        });
+      }
+      if (data.sprintAttempts) sprintAttempts = data.sprintAttempts;
+      if (data.illinoisAttempts) illinoisAttempts = data.illinoisAttempts;
+      if (data.playerIdCounter) playerIdCounter = data.playerIdCounter;
+      if (data.players && data.players.length) {
+        data.players.forEach(function (p) {
+          addPlayer(p);
+        });
+      }
+      updateAddResultsBtn();
+      // If we loaded directly into results view, build the grid
+      if (currentView === 'input-results') {
+        setTimeout(buildResultsGrid, 0);
+      }
+    } catch (e) { /* ignore corrupt data */ }
+  }
+
+  /* ── Test selection toggle ─────────────────── */
+  window.toggleTest = function (el) {
+    var test = el.getAttribute('data-test');
+    if (selectedTests[test]) {
+      if (!confirm('This will clear all ' + testLabels[test] + ' data. Are you sure?')) return;
+      selectedTests[test] = false;
+      el.classList.remove('selected');
+      clearTestData(test);
+    } else {
+      selectedTests[test] = true;
+      el.classList.add('selected');
+    }
+    document.getElementById('test-select-error').classList.remove('visible');
+    updateAddResultsBtn();
+    saveSession();
+  };
+
+  function clearTestData(test) {
+    players.forEach(function (p) {
+      if (test === 'sprint') p.sprint = [['','','',''],['','','',''],['','','','']];
+      if (test === 'illinois') p.illinois = ['','',''];
+      if (test === 'yoyo') { p.yoyoLevel = ''; p.yoyoShuttle = ''; }
+    });
+    if (test === 'sprint') sprintAttempts = 1;
+    if (test === 'illinois') illinoisAttempts = 1;
+  }
+
+  /* ── Player management ─────────────────────── */
+  function buildPlayerHTML(pid, index, data) {
+    var d = data || {};
+    return '' +
+      '<div class="player-card" id="player-' + pid + '">' +
+        '<div class="player-card-header">' +
+          '<span class="player-card-number">Player ' + index + '</span>' +
+          '<button class="player-remove-btn" onclick="removePlayer(' + pid + ')">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+            'Remove' +
+          '</button>' +
+        '</div>' +
+        '<div class="input-form-grid">' +
+          '<div class="form-group">' +
+            '<label class="tooltip-trigger">' +
+              'Nickname <span class="required">*</span>' +
+              '<span class="tooltip-icon">?</span>' +
+              '<span class="tooltip-text">Nicknames appear in your report and may be shared with Mingle Sport if you give consent below. We recommend not using full names.</span>' +
+            '</label>' +
+            '<input type="text" data-field="nickname" placeholder="e.g. Tom" value="' + escAttr(d.nickname || '') + '">' +
+            '<span class="error-msg">Nickname is required</span>' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label>Age <span class="required">*</span></label>' +
+            '<input type="number" data-field="age" placeholder="e.g. 14" min="4" max="99" step="1" value="' + escAttr(d.age || '') + '">' +
+            '<span class="error-msg">Age is required</span>' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label>Gender</label>' +
+            '<select data-field="gender">' +
+              '<option value="">Select…</option>' +
+              '<option value="Male"' + sel(d.gender, 'Male') + '>Male</option>' +
+              '<option value="Female"' + sel(d.gender, 'Female') + '>Female</option>' +
+            '</select>' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label>Preferred position</label>' +
+            '<select data-field="position">' +
+              '<option value="">Select…</option>' +
+              '<option value="Goalkeeper"' + sel(d.position, 'Goalkeeper') + '>Goalkeeper</option>' +
+              '<option value="Centre-back"' + sel(d.position, 'Centre-back') + '>Centre-back</option>' +
+              '<option value="Left back"' + sel(d.position, 'Left back') + '>Left back</option>' +
+              '<option value="Right back"' + sel(d.position, 'Right back') + '>Right back</option>' +
+              '<option value="Defensive midfielder"' + sel(d.position, 'Defensive midfielder') + '>Defensive midfielder</option>' +
+              '<option value="Central midfielder"' + sel(d.position, 'Central midfielder') + '>Central midfielder</option>' +
+              '<option value="Attacking midfielder"' + sel(d.position, 'Attacking midfielder') + '>Attacking midfielder</option>' +
+              '<option value="Left winger"' + sel(d.position, 'Left winger') + '>Left winger</option>' +
+              '<option value="Right winger"' + sel(d.position, 'Right winger') + '>Right winger</option>' +
+              '<option value="Striker"' + sel(d.position, 'Striker') + '>Striker</option>' +
+            '</select>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function escAttr(s) {
+    if (typeof s !== 'string') s = String(s || '');
+    return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  }
+
+  function sel(val, option) {
+    return val === option ? ' selected' : '';
+  }
+
+  function renumberPlayers() {
+    var cards = document.querySelectorAll('#players-container .player-card');
+    cards.forEach(function (card, i) {
+      card.querySelector('.player-card-number').textContent = 'Player ' + (i + 1);
+    });
+  }
+
+  window.addPlayer = function (data) {
+    var pid = data ? data.id : playerIdCounter++;
+    if (!data) {
+      players.push({
+        id: pid, nickname: '', age: '', gender: '', position: '',
+        sprint: [['','','',''],['','','',''],['','','','']],
+        illinois: ['','',''],
+        yoyoLevel: '', yoyoShuttle: ''
+      });
+    } else {
+      players.push(data);
+    }
+    var container = document.getElementById('players-container');
+    var index = players.length;
+    var div = document.createElement('div');
+    div.innerHTML = buildPlayerHTML(pid, index, data);
+    var card = div.firstChild;
+    container.appendChild(card);
+
+    // Attach input listeners to this card
+    card.querySelectorAll('input, select').forEach(function (el) {
+      el.addEventListener('input', onPlayerInput);
+      el.addEventListener('change', onPlayerInput);
+    });
+
+    updateAddResultsBtn();
+    if (!data) {
+      saveSession();
+    }
+  };
+
+  window.removePlayer = function (pid) {
+    if (!confirm('Remove this player?')) return;
+    var el = document.getElementById('player-' + pid);
+    if (el) el.remove();
+    players = players.filter(function (p) { return p.id !== pid; });
+    renumberPlayers();
+    updateAddResultsBtn();
+    saveSession();
+  };
+
+  /* ── Clear session ─────────────────────────── */
+  window.clearSession = function () {
+    if (!confirm('Are you sure you want to clear all data? This cannot be undone.')) return;
+    localStorage.removeItem('mingle_session_data');
+    sessionFieldIds.forEach(function (id) {
+      document.getElementById(id).value = '';
+    });
+    selectedTests = { sprint: false, illinois: false, yoyo: false };
+    document.querySelectorAll('.test-select-option').forEach(function (el) {
+      el.classList.remove('selected');
+    });
+    players = [];
+    playerIdCounter = 0;
+    sprintAttempts = 1;
+    illinoisAttempts = 1;
+    document.getElementById('players-container').innerHTML = '';
+    updateAddResultsBtn();
+  };
+
+  /* ── Results grid ─────────────────────────── */
+  function buildResultsGrid() {
+    syncPlayersFromDOM();
+    saveSession();
+
+    // Update page title and session info header
+    var clubName = document.getElementById('input-club-name').value || 'Enter Results';
+    var teamName = document.getElementById('input-team-name').value || '';
+    var testDate = document.getElementById('input-test-date').value || '';
+    var titleEl = document.getElementById('results-page-title');
+    if (titleEl) titleEl.textContent = clubName;
+    var infoEl = document.getElementById('results-session-info');
+    var subtitle = [teamName, testDate].filter(function (s) { return s; }).join(' \u00b7 ');
+    if (infoEl) infoEl.textContent = subtitle || 'Enter test measurements';
+
+    if (players.length === 0) {
+      document.getElementById('results-grid-container').innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:40px 0;">No players added. Go back to add players first.</p>';
+      return;
+    }
+
+    var html = '<div class="results-grid-wrap"><table class="results-grid">';
+
+    // Group header row
+    html += '<thead><tr class="results-grid-group-row">';
+    html += '<th class="results-grid-player-col" rowspan="2">Player</th>';
+
+    if (selectedTests.sprint) {
+      for (var sa = 0; sa < sprintAttempts; sa++) {
+        html += '<th colspan="5" class="results-grid-group sprint-group">Sprint A' + (sa + 1);
+        if (sprintAttempts > 1 && sa === sprintAttempts - 1) {
+          html += ' <button class="grid-remove-btn" onclick="removeSprintAttempt()" title="Remove attempt">&minus;</button>';
+        }
+        if (sa === sprintAttempts - 1 && sprintAttempts < 3) {
+          html += ' <button class="grid-add-btn" onclick="addSprintAttempt()" title="Add an attempt">+</button>';
+        }
+        html += '</th>';
+      }
+    }
+    if (selectedTests.illinois) {
+      for (var ia = 0; ia < illinoisAttempts; ia++) {
+        html += '<th colspan="2" class="results-grid-group illinois-group">Illinois A' + (ia + 1);
+        if (illinoisAttempts > 1 && ia === illinoisAttempts - 1) {
+          html += ' <button class="grid-remove-btn" onclick="removeIllinoisAttempt()" title="Remove attempt">&minus;</button>';
+        }
+        if (ia === illinoisAttempts - 1 && illinoisAttempts < 3) {
+          html += ' <button class="grid-add-btn" onclick="addIllinoisAttempt()" title="Add an attempt">+</button>';
+        }
+        html += '</th>';
+      }
+    }
+    if (selectedTests.yoyo) {
+      html += '<th colspan="3" class="results-grid-group yoyo-group">Yo-Yo</th>';
+    }
+    html += '</tr>';
+
+    // Column header row
+    html += '<tr class="results-grid-col-row">';
+    if (selectedTests.sprint) {
+      for (var sa2 = 0; sa2 < sprintAttempts; sa2++) {
+        html += '<th>T1 (1m)</th><th>T2 (10m)</th><th>T3 (20m)</th><th>T4 (30m)</th><th class="results-grid-calc-col">Result</th>';
+      }
+    }
+    if (selectedTests.illinois) {
+      for (var ia2 = 0; ia2 < illinoisAttempts; ia2++) {
+        html += '<th>Time (s)</th><th class="results-grid-calc-col">Result</th>';
+      }
+    }
+    if (selectedTests.yoyo) {
+      html += '<th>Level</th><th>Shuttle</th><th class="results-grid-calc-col">Result</th>';
+    }
+    html += '</tr></thead>';
+
+    // Body rows
+    html += '<tbody>';
+    players.forEach(function (p, idx) {
+      html += '<tr data-player-id="' + p.id + '">';
+      html += '<td class="results-grid-player-col">' + escAttr(p.nickname || 'Player ' + (idx + 1)) + '</td>';
+
+      if (selectedTests.sprint) {
+        for (var sa3 = 0; sa3 < sprintAttempts; sa3++) {
+          var sd = p.sprint[sa3] || ['', '', '', ''];
+          for (var c = 0; c < 4; c++) {
+            html += '<td><input type="text" class="grid-input" data-pid="' + p.id + '" data-field="sprint-' + sa3 + '-' + c + '" placeholder="0:01.23" value="' + escAttr(sd[c] || '') + '"></td>';
+          }
+          html += '<td class="results-grid-calc-cell" id="grid-sprint-result-' + p.id + '-' + sa3 + '"></td>';
+        }
+      }
+      if (selectedTests.illinois) {
+        for (var ia3 = 0; ia3 < illinoisAttempts; ia3++) {
+          html += '<td><input type="text" class="grid-input" data-pid="' + p.id + '" data-field="illinois-' + ia3 + '" placeholder="15.43" value="' + escAttr(p.illinois[ia3] || '') + '"></td>';
+          html += '<td class="results-grid-calc-cell" id="grid-illinois-result-' + p.id + '-' + ia3 + '"></td>';
+        }
+      }
+      if (selectedTests.yoyo) {
+        var yoyoLevels = [5,9,11,12,13,14,15,16,17,18,19,20];
+        html += '<td><select class="grid-input" data-pid="' + p.id + '" data-field="yoyo-level" style="width:70px;">';
+        html += '<option value="">—</option>';
+        for (var yl = 0; yl < yoyoLevels.length; yl++) {
+          html += '<option value="' + yoyoLevels[yl] + '"' + (String(p.yoyoLevel) === String(yoyoLevels[yl]) ? ' selected' : '') + '>' + yoyoLevels[yl] + '</option>';
+        }
+        html += '</select></td>';
+        var shuttles = p.yoyoLevel ? getShuttlesForLevel(p.yoyoLevel) : [];
+        html += '<td><select class="grid-input" data-pid="' + p.id + '" data-field="yoyo-shuttle" style="width:70px;">';
+        html += '<option value="">—</option>';
+        for (var ys = 0; ys < shuttles.length; ys++) {
+          html += '<option value="' + shuttles[ys] + '"' + (String(p.yoyoShuttle) === String(shuttles[ys]) ? ' selected' : '') + '>' + shuttles[ys] + '</option>';
+        }
+        html += '</select></td>';
+        html += '<td class="results-grid-calc-cell" id="grid-yoyo-result-' + p.id + '"></td>';
+      }
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+
+    document.getElementById('results-grid-container').innerHTML = html;
+
+    // Attach event listeners to grid inputs
+    document.querySelectorAll('#results-grid-container .grid-input').forEach(function (inp) {
+      inp.addEventListener('input', onGridInput);
+      inp.addEventListener('change', onGridInput);
+    });
+
+    // Initial calculations
+    updateGridCalculations();
+  }
+
+  function onGridInput(e) {
+    var inp = e.target;
+    var pid = parseInt(inp.getAttribute('data-pid'), 10);
+    var field = inp.getAttribute('data-field');
+    var player = players.find(function (p) { return p.id === pid; });
+    if (!player) return;
+
+    if (field.indexOf('sprint-') === 0) {
+      var parts = field.split('-');
+      var attemptIdx = parseInt(parts[1], 10);
+      var coneIdx = parseInt(parts[2], 10);
+      if (!player.sprint[attemptIdx]) player.sprint[attemptIdx] = ['', '', '', ''];
+      player.sprint[attemptIdx][coneIdx] = inp.value;
+    } else if (field.indexOf('illinois-') === 0) {
+      var idx = parseInt(field.split('-')[1], 10);
+      player.illinois[idx] = inp.value;
+    } else if (field === 'yoyo-level') {
+      player.yoyoLevel = inp.value;
+      // Update the shuttle dropdown for this player
+      var row = inp.closest('tr');
+      var shuttleSelect = row.querySelector('[data-field="yoyo-shuttle"]');
+      if (shuttleSelect) {
+        var shuttles = inp.value ? getShuttlesForLevel(inp.value) : [];
+        var oldVal = player.yoyoShuttle;
+        var optHtml = '<option value="">\u2014</option>';
+        var found = false;
+        for (var si = 0; si < shuttles.length; si++) {
+          var isSel = String(oldVal) === String(shuttles[si]);
+          if (isSel) found = true;
+          optHtml += '<option value="' + shuttles[si] + '"' + (isSel ? ' selected' : '') + '>' + shuttles[si] + '</option>';
+        }
+        shuttleSelect.innerHTML = optHtml;
+        if (!found) { player.yoyoShuttle = ''; }
+      }
+    } else if (field === 'yoyo-shuttle') {
+      player.yoyoShuttle = inp.value;
+    }
+
+    updateGridCalculations();
+    saveSession();
+  }
+
+  function updateGridCalculations() {
+    players.forEach(function (p) {
+      // Sprint
+      var bestAccel = null;
+      var bestMaxSpd = null;
+      var bestSprintAttempt = -1;
+      for (var a = 0; a < sprintAttempts; a++) {
+        var resultEl = document.getElementById('grid-sprint-result-' + p.id + '-' + a);
+        if (!resultEl) continue;
+        var sd = p.sprint[a] || ['', '', '', ''];
+        var res = calcSprintAttempt(sd[0], sd[1], sd[2], sd[3]);
+        if (res) {
+          resultEl.innerHTML = 'Acc: <b>' + res.acceleration.toFixed(1) + ' km/h</b> Max: <b>' + res.maxSpeed.toFixed(1) + ' km/h</b>';
+          if (bestAccel === null || res.acceleration > bestAccel) {
+            bestAccel = res.acceleration;
+            bestMaxSpd = res.maxSpeed;
+            bestSprintAttempt = a;
+          }
+        } else {
+          resultEl.innerHTML = '';
+        }
+      }
+      for (var a2 = 0; a2 < sprintAttempts; a2++) {
+        var rEl = document.getElementById('grid-sprint-result-' + p.id + '-' + a2);
+        if (rEl) {
+          if (a2 === bestSprintAttempt && bestAccel !== null) rEl.classList.add('best-result');
+          else rEl.classList.remove('best-result');
+        }
+      }
+
+      // Illinois
+      var bestIllSpd = null;
+      var bestIllAttempt = -1;
+      for (var ia = 0; ia < illinoisAttempts; ia++) {
+        var rEl2 = document.getElementById('grid-illinois-result-' + p.id + '-' + ia);
+        if (!rEl2) continue;
+        var res2 = calcIllinoisAttempt(p.illinois[ia]);
+        if (res2) {
+          rEl2.innerHTML = '<b>' + res2.speed.toFixed(1) + '</b> km/h';
+          if (bestIllSpd === null || res2.speed > bestIllSpd) {
+            bestIllSpd = res2.speed;
+            bestIllAttempt = ia;
+          }
+        } else {
+          rEl2.innerHTML = '';
+        }
+      }
+      for (var ia2 = 0; ia2 < illinoisAttempts; ia2++) {
+        var rEl3 = document.getElementById('grid-illinois-result-' + p.id + '-' + ia2);
+        if (rEl3) {
+          if (ia2 === bestIllAttempt && bestIllSpd !== null) rEl3.classList.add('best-result');
+          else rEl3.classList.remove('best-result');
+        }
+      }
+
+      // Yo-Yo
+      var yEl = document.getElementById('grid-yoyo-result-' + p.id);
+      if (yEl) {
+        var yRes = calcYoyo(p.yoyoLevel, p.yoyoShuttle);
+        if (yRes) {
+          yEl.innerHTML = '<b>' + yRes.distance + 'm</b> \u00b7 VO2Max: <b>' + yRes.vo2max.toFixed(1) + '</b>';
+          yEl.classList.add('best-result');
+        } else {
+          yEl.innerHTML = '';
+          yEl.classList.remove('best-result');
+        }
+      }
+    });
+  }
+
+  window.addSprintAttempt = function () {
+    if (sprintAttempts >= 3) return;
+    sprintAttempts++;
+    players.forEach(function (p) {
+      while (p.sprint.length < sprintAttempts) p.sprint.push(['', '', '', '']);
+    });
+    buildResultsGrid();
+    saveSession();
+  };
+
+  window.addIllinoisAttempt = function () {
+    if (illinoisAttempts >= 3) return;
+    illinoisAttempts++;
+    players.forEach(function (p) {
+      while (p.illinois.length < illinoisAttempts) p.illinois.push('');
+    });
+    buildResultsGrid();
+    saveSession();
+  };
+
+  window.removeSprintAttempt = function () {
+    if (sprintAttempts <= 1) return;
+    var idx = sprintAttempts - 1;
+    var hasData = players.some(function (p) {
+      var d = p.sprint[idx];
+      return d && d.some(function (v) { return v && v.trim && v.trim() !== ''; });
+    });
+    if (hasData && !confirm('This will delete all data in Sprint A' + (idx + 1) + '. Are you sure?')) return;
+    players.forEach(function (p) { p.sprint[idx] = ['', '', '', '']; });
+    sprintAttempts--;
+    buildResultsGrid();
+    saveSession();
+  };
+
+  window.removeIllinoisAttempt = function () {
+    if (illinoisAttempts <= 1) return;
+    var idx = illinoisAttempts - 1;
+    var hasData = players.some(function (p) {
+      return p.illinois[idx] && p.illinois[idx].trim() !== '';
+    });
+    if (hasData && !confirm('This will delete all data in Illinois A' + (idx + 1) + '. Are you sure?')) return;
+    players.forEach(function (p) { p.illinois[idx] = ''; });
+    illinoisAttempts--;
+    buildResultsGrid();
+    saveSession();
+  };
+
+  /* ── Add Results button ─────────────────────── */
+  function updateAddResultsBtn() {
+    var btn = document.getElementById('add-results-btn');
+    if (!btn) return;
+    var hasTest = selectedTests.sprint || selectedTests.illinois || selectedTests.yoyo;
+    var hasPlayer = players.length > 0;
+    btn.disabled = !(hasTest && hasPlayer);
+  }
+
+  window.goToResults = function () {
+    var hasTest = selectedTests.sprint || selectedTests.illinois || selectedTests.yoyo;
+    if (!hasTest) {
+      document.getElementById('test-select-error').classList.add('visible');
+      return;
+    }
+    if (players.length === 0) return;
+    syncPlayersFromDOM();
+    showView('input-results');
+  };
+
+  /* ── Download CSV ──────────────────────────── */
+  window.downloadCSV = function () {
+    var club = document.getElementById('input-club-name').value;
+    var team = document.getElementById('input-team-name').value;
+    var level = document.getElementById('input-playing-level').value;
+    var date = document.getElementById('input-test-date').value;
+
+    var headers = [
+      'Club', 'Team', 'Playing level', 'Test date',
+      'Nickname', 'Age', 'Gender', 'Position',
+      'Sprint best acceleration (km/h)', 'Sprint best max speed (km/h)',
+      'Sprint attempt 1 T1', 'Sprint attempt 1 T2', 'Sprint attempt 1 T3', 'Sprint attempt 1 T4',
+      'Sprint attempt 2 T1', 'Sprint attempt 2 T2', 'Sprint attempt 2 T3', 'Sprint attempt 2 T4',
+      'Sprint attempt 3 T1', 'Sprint attempt 3 T2', 'Sprint attempt 3 T3', 'Sprint attempt 3 T4',
+      'Illinois best speed (km/h)',
+      'Illinois attempt 1 time (s)', 'Illinois attempt 2 time (s)', 'Illinois attempt 3 time (s)',
+      'Yo-Yo speed level', 'Yo-Yo shuttle', 'Yo-Yo distance (m)', 'Yo-Yo VO2Max'
+    ];
+
+    var rows = [headers];
+
+    players.forEach(function (p) {
+      var row = [club, team, level, date, p.nickname, p.age, p.gender, p.position];
+
+      // Sprint best
+      var bestAccel = '';
+      var bestMax = '';
+      if (selectedTests.sprint) {
+        var ba = null, bm = null;
+        for (var a = 0; a < 3; a++) {
+          var r = calcSprintAttempt(
+            (p.sprint[a] || [])[0], (p.sprint[a] || [])[1],
+            (p.sprint[a] || [])[2], (p.sprint[a] || [])[3]
+          );
+          if (r && (ba === null || r.acceleration > ba)) {
+            ba = r.acceleration;
+            bm = r.maxSpeed;
+          }
+        }
+        if (ba !== null) { bestAccel = ba.toFixed(1); bestMax = bm.toFixed(1); }
+      }
+      row.push(bestAccel, bestMax);
+
+      // Sprint attempts 1-3
+      for (var sa = 0; sa < 3; sa++) {
+        if (selectedTests.sprint && p.sprint[sa]) {
+          for (var c = 0; c < 4; c++) row.push(p.sprint[sa][c] || '');
+        } else {
+          row.push('', '', '', '');
+        }
+      }
+
+      // Illinois best
+      var bestIll = '';
+      if (selectedTests.illinois) {
+        var bi = null;
+        for (var ia = 0; ia < 3; ia++) {
+          var r2 = calcIllinoisAttempt(p.illinois[ia]);
+          if (r2 && (bi === null || r2.speed > bi)) bi = r2.speed;
+        }
+        if (bi !== null) bestIll = bi.toFixed(1);
+      }
+      row.push(bestIll);
+
+      // Illinois attempts 1-3
+      for (var ia2 = 0; ia2 < 3; ia2++) {
+        row.push(selectedTests.illinois ? (p.illinois[ia2] || '') : '');
+      }
+
+      // Yo-Yo
+      if (selectedTests.yoyo) {
+        var yr = calcYoyo(p.yoyoLevel, p.yoyoShuttle);
+        row.push(p.yoyoLevel || '', p.yoyoShuttle || '');
+        row.push(yr ? String(yr.distance) : '', yr ? yr.vo2max.toFixed(1) : '');
+      } else {
+        row.push('', '', '', '');
+      }
+
+      rows.push(row);
+    });
+
+    var csv = rows.map(function (r) {
+      return r.map(function (cell) {
+        var s = String(cell == null ? '' : cell);
+        if (s.indexOf(',') !== -1 || s.indexOf('"') !== -1 || s.indexOf('\n') !== -1) {
+          return '"' + s.replace(/"/g, '""') + '"';
+        }
+        return s;
+      }).join(',');
+    }).join('\r\n');
+
+    var slug = function (s) { return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); };
+    var filename = 'mingle-results-' + slug(club) + '-' + slug(team) + '-' + (date || 'undated') + '.csv';
+
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
+  /* ── Download PDF ───────────────────────────── */
+  window.downloadPDF = function () {
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    var pw = doc.internal.pageSize.getWidth();   // 297
+    var ph = doc.internal.pageSize.getHeight();  // 210
+    var mx = 12;
+    var cw = pw - mx * 2;                        // 273
+    var y = 0;
+    var rh = 7;                                   // row height
+
+    var club = document.getElementById('input-club-name').value || '';
+    var team = document.getElementById('input-team-name').value || '';
+    var level = document.getElementById('input-playing-level').value || '';
+    var date = document.getElementById('input-test-date').value || '';
+    var tests = Object.keys(selectedTests).filter(function (k) { return selectedTests[k]; });
+
+    // Colours
+    var green700 = [21, 128, 61];
+    var green50  = [240, 253, 244];
+    var green900 = [20, 83, 45];
+    var gray600  = [75, 85, 99];
+    var gray200  = [229, 231, 235];
+    var white    = [255, 255, 255];
+
+    function addFooter() {
+      doc.setFontSize(7);
+      doc.setTextColor(gray600[0], gray600[1], gray600[2]);
+      doc.text('Generated by Mingle Sport Performance Testing Guide', pw / 2, ph - 8, { align: 'center' });
+    }
+
+    // ── Build column definitions ──
+    var cols = [];
+    // Player column
+    cols.push({ group: '', header: 'Player', type: 'player', w: 28 });
+
+    if (selectedTests.sprint) {
+      for (var sa = 0; sa < sprintAttempts; sa++) {
+        var g = 'Sprint A' + (sa + 1);
+        cols.push({ group: g, header: 'T1 (1m)', type: 'sprint-data', attempt: sa, cone: 0 });
+        cols.push({ group: g, header: 'T2 (10m)', type: 'sprint-data', attempt: sa, cone: 1 });
+        cols.push({ group: g, header: 'T3 (20m)', type: 'sprint-data', attempt: sa, cone: 2 });
+        cols.push({ group: g, header: 'T4 (30m)', type: 'sprint-data', attempt: sa, cone: 3 });
+        cols.push({ group: g, header: 'Result', type: 'sprint-result', attempt: sa });
+      }
+    }
+    if (selectedTests.illinois) {
+      for (var ia = 0; ia < illinoisAttempts; ia++) {
+        var gi = 'Illinois A' + (ia + 1);
+        cols.push({ group: gi, header: 'Time (s)', type: 'illinois-data', attempt: ia });
+        cols.push({ group: gi, header: 'Result', type: 'illinois-result', attempt: ia });
+      }
+    }
+    if (selectedTests.yoyo) {
+      cols.push({ group: 'Yo-Yo', header: 'Level', type: 'yoyo-level' });
+      cols.push({ group: 'Yo-Yo', header: 'Shuttle', type: 'yoyo-shuttle' });
+      cols.push({ group: 'Yo-Yo', header: 'Result', type: 'yoyo-result' });
+    }
+
+    // ── Calculate column widths ──
+    var playerW = 28;
+    var dataCols = cols.length - 1;
+    var remainW = cw - playerW;
+    var resultCount = 0;
+    var dataCount = 0;
+    for (var ci = 1; ci < cols.length; ci++) {
+      if (cols[ci].type.indexOf('-result') !== -1) resultCount++;
+      else dataCount++;
+    }
+    // Result columns get 1.8x width of data columns
+    var unit = remainW / (dataCount + resultCount * 1.8);
+    var dataW = unit;
+    var resultW = unit * 1.8;
+    cols[0].w = playerW;
+    for (var ci2 = 1; ci2 < cols.length; ci2++) {
+      cols[ci2].w = cols[ci2].type.indexOf('-result') !== -1 ? resultW : dataW;
+    }
+
+    // Font size — scale down if many columns
+    var fontSize = 7.5;
+    if (cols.length > 16) fontSize = 6.5;
+    if (cols.length > 22) fontSize = 5.5;
+
+    // ── Identify groups for merged header ──
+    var groups = [];
+    var prevGroup = null;
+    cols.forEach(function (c, i) {
+      if (c.group === prevGroup && c.group !== '') {
+        groups[groups.length - 1].span++;
+        groups[groups.length - 1].w += c.w;
+      } else {
+        groups.push({ label: c.group, span: 1, w: c.w, startIdx: i });
+        prevGroup = c.group;
+      }
+    });
+
+    // ── Pre-calculate best attempts per player ──
+    var bestSprint = {};
+    var bestIllinois = {};
+    players.forEach(function (p) {
+      // Sprint
+      var bA = null, bIdx = -1;
+      for (var a = 0; a < sprintAttempts; a++) {
+        var sd = p.sprint[a] || ['', '', '', ''];
+        var r = calcSprintAttempt(sd[0], sd[1], sd[2], sd[3]);
+        if (r && (bA === null || r.acceleration > bA)) { bA = r.acceleration; bIdx = a; }
+      }
+      bestSprint[p.id] = bIdx;
+      // Illinois
+      var bI = null, bIIdx = -1;
+      for (var ia2 = 0; ia2 < illinoisAttempts; ia2++) {
+        var r2 = calcIllinoisAttempt(p.illinois[ia2]);
+        if (r2 && (bI === null || r2.speed > bI)) { bI = r2.speed; bIIdx = ia2; }
+      }
+      bestIllinois[p.id] = bIIdx;
+    });
+
+    // ── Draw table headers ──
+    function drawHeaders() {
+      // Group header row
+      doc.setFillColor(green700[0], green700[1], green700[2]);
+      doc.rect(mx, y, cw, rh, 'F');
+      doc.setFontSize(fontSize);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+
+      var gx = mx;
+      groups.forEach(function (g) {
+        if (g.label) {
+          doc.text(g.label, gx + g.w / 2, y + rh * 0.65, { align: 'center' });
+        } else {
+          // Player column — label in group row
+          doc.text('Player', gx + g.w / 2, y + rh * 0.65, { align: 'center' });
+        }
+        // Right border between groups
+        if (gx + g.w < mx + cw - 0.5) {
+          doc.setDrawColor(255, 255, 255);
+          doc.setLineWidth(0.3);
+          doc.line(gx + g.w, y + 1, gx + g.w, y + rh - 1);
+        }
+        gx += g.w;
+      });
+      y += rh;
+
+      // Column header row
+      doc.setFillColor(green900[0], green900[1], green900[2]);
+      doc.rect(mx, y, cw, rh, 'F');
+      doc.setFontSize(fontSize - 0.5);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(255, 255, 255);
+
+      var hx = mx;
+      cols.forEach(function (c) {
+        if (c.type !== 'player') {
+          doc.text(c.header, hx + c.w / 2, y + rh * 0.65, { align: 'center' });
+        }
+        hx += c.w;
+      });
+
+      // Column borders
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.2);
+      hx = mx;
+      for (var b = 0; b < cols.length - 1; b++) {
+        hx += cols[b].w;
+        doc.line(hx, y + 1, hx, y + rh - 1);
+      }
+      y += rh;
+    }
+
+    // ── Header band ──
+    doc.setFillColor(green700[0], green700[1], green700[2]);
+    doc.rect(0, 0, pw, 32, 'F');
+    doc.setFontSize(16);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Mingle Sport', mx, 12);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Performance Test Results', mx, 19);
+    doc.setFontSize(8);
+    doc.text(club + '  \u2014  ' + team + '  \u2014  ' + level + '  \u2014  ' + date, mx, 26);
+    y = 36;
+
+    // ── Session info (compact) ──
+    doc.setFontSize(8);
+    doc.setTextColor(gray600[0], gray600[1], gray600[2]);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Tests performed: ' + tests.join(', ') + '     Players: ' + players.length, mx, y);
+    y += 6;
+
+    // ── Table ──
+    drawHeaders();
+
+    // Data rows
+    players.forEach(function (p, idx) {
+      // Page break check
+      if (y + rh > ph - 16) {
+        addFooter();
+        doc.addPage();
+        y = 12;
+        drawHeaders();
+      }
+
+      var bg = idx % 2 === 0 ? white : green50;
+      doc.setFillColor(bg[0], bg[1], bg[2]);
+      doc.rect(mx, y, cw, rh, 'F');
+
+      // Cell borders
+      doc.setDrawColor(gray200[0], gray200[1], gray200[2]);
+      doc.setLineWidth(0.2);
+      doc.line(mx, y + rh, mx + cw, y + rh); // bottom border
+      var bx = mx;
+      for (var b2 = 0; b2 < cols.length - 1; b2++) {
+        bx += cols[b2].w;
+        doc.line(bx, y, bx, y + rh);
+      }
+
+      // Cell content
+      var cx2 = mx;
+      doc.setFontSize(fontSize);
+      cols.forEach(function (c) {
+        var val = '';
+        var isBest = false;
+        var isResult = c.type.indexOf('-result') !== -1;
+
+        if (c.type === 'player') {
+          val = p.nickname || 'Player ' + (idx + 1);
+        } else if (c.type === 'sprint-data') {
+          var sd = p.sprint[c.attempt] || ['', '', '', ''];
+          val = sd[c.cone] || '';
+        } else if (c.type === 'sprint-result') {
+          var sd2 = p.sprint[c.attempt] || ['', '', '', ''];
+          var sr = calcSprintAttempt(sd2[0], sd2[1], sd2[2], sd2[3]);
+          if (sr) {
+            val = sr.acceleration.toFixed(1) + ' / ' + sr.maxSpeed.toFixed(1);
+            isBest = bestSprint[p.id] === c.attempt;
+          }
+        } else if (c.type === 'illinois-data') {
+          val = p.illinois[c.attempt] || '';
+        } else if (c.type === 'illinois-result') {
+          var ir = calcIllinoisAttempt(p.illinois[c.attempt]);
+          if (ir) {
+            val = ir.speed.toFixed(1) + ' km/h';
+            isBest = bestIllinois[p.id] === c.attempt;
+          }
+        } else if (c.type === 'yoyo-level') {
+          val = p.yoyoLevel ? String(p.yoyoLevel) : '';
+        } else if (c.type === 'yoyo-shuttle') {
+          val = p.yoyoShuttle ? String(p.yoyoShuttle) : '';
+        } else if (c.type === 'yoyo-result') {
+          var yr = calcYoyo(p.yoyoLevel, p.yoyoShuttle);
+          if (yr) {
+            val = yr.distance + 'm / ' + yr.vo2max.toFixed(1);
+            isBest = true;
+          }
+        }
+
+        // Highlight best result cells
+        if (isBest && isResult) {
+          doc.setFillColor(green50[0], green50[1], green50[2]);
+          doc.rect(cx2, y, c.w, rh, 'F');
+          // Re-draw borders for this cell
+          doc.setDrawColor(gray200[0], gray200[1], gray200[2]);
+          doc.setLineWidth(0.2);
+          doc.line(cx2, y + rh, cx2 + c.w, y + rh);
+        }
+
+        // Text styling
+        if (c.type === 'player') {
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(green900[0], green900[1], green900[2]);
+          doc.text(val, cx2 + 2, y + rh * 0.65);
+        } else if (isResult && val) {
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(green700[0], green700[1], green700[2]);
+          doc.text(val, cx2 + c.w / 2, y + rh * 0.65, { align: 'center' });
+        } else {
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(60, 60, 60);
+          doc.text(val, cx2 + c.w / 2, y + rh * 0.65, { align: 'center' });
+        }
+
+        cx2 += c.w;
+      });
+
+      y += rh;
+    });
+
+    // Table top border
+    var tableTop = 36 + 6; // after session info line
+    doc.setDrawColor(gray200[0], gray200[1], gray200[2]);
+    doc.setLineWidth(0.2);
+    doc.line(mx, y, mx + cw, y); // final bottom border
+
+    // Footer on last page
+    addFooter();
+
+    var slug = function (s) { return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); };
+    doc.save('mingle-results-' + slug(club) + '-' + slug(team) + '-' + (date || 'undated') + '.pdf');
+  };
+
+  /* ── Submit via email ───────────────────────── */
+  window.updateEmailBtn = function () {
+    var cb = document.getElementById('consent-checkbox');
+    var btn = document.getElementById('email-submit-btn');
+    if (btn) btn.disabled = !(cb && cb.checked);
+  };
+
+  window.submitViaEmail = function () {
+    var club = document.getElementById('input-club-name').value || '';
+    var team = document.getElementById('input-team-name').value || '';
+    var level = document.getElementById('input-playing-level').value || '';
+    var date = document.getElementById('input-test-date').value || '';
+    var tests = Object.keys(selectedTests).filter(function (k) { return selectedTests[k]; }).join(', ');
+
+    var subject = 'Performance Test Results \u2014 ' + club + ' ' + team + ' \u2014 ' + date;
+
+    var body = '';
+    body += 'Hi Mingle Sport,\n\n';
+    body += 'We completed our beta performance testing session and are sharing our results below.\n\n';
+    body += 'Please find the full results as a CSV file attached to this email. You can download it using the "Download CSV" button on the form before sending.\n\n';
+    body += 'Session: ' + club + ' \u2014 ' + team + ' \u2014 ' + level + ' \u2014 ' + date + '\n';
+    body += 'Tests performed: ' + tests + '\n\n';
+    body += 'If you have any questions about our results, feel free to reply to this email.\n\n';
+    body += '\n\n';
+    body += '---\nGenerated by Mingle Sport Performance Testing Guide\n';
+
+    var mailto = 'mailto:Sanne@mingle.sport'
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+
+    window.location.href = mailto;
+  };
+
+  /* ── Attach listeners ──────────────────────── */
+  sessionFieldIds.forEach(function (id) {
+    var el = document.getElementById(id);
+    el.addEventListener('input', saveSession);
+    el.addEventListener('change', saveSession);
+  });
+
+  restoreSession();
 })();
 </script>
 
